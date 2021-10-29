@@ -25,8 +25,8 @@ app.get('/' , (req, res , next ) => {
 })
 
 
-app.get('/flight' , (req, res,next ) => {
-    res.send(flights.find({}));
+app.get('/flight' , async(req, res,next ) => {
+    res.send( await flights.find({}));
 })
 
 
