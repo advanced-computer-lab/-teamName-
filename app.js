@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require('mongoose');
+const flights = require('./models/flight')
 // THIS IS WRONG NEVER DO THAT !! Only for the task we put the DB Link here!! NEVER DO THAAAT AGAIN !!
 const MongoURI = 'mongodb+srv://newUser:BoVfIDwrkeEF1Muv@cluster0.glusa.mongodb.net/ACL?retryWrites=true&w=majority' ;
 
@@ -24,7 +25,9 @@ app.get('/' , (req, res , next ) => {
 })
 
 
-
+app.get('/flight' , (req, res,next ) => {
+    res.send(flights.find({}));
+})
 
 
 
