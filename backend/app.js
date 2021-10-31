@@ -26,7 +26,14 @@ app.get('/' , (req, res , next ) => {
 
 
 app.get('/flight' , async(req, res,next ) => {
-    res.send( await flights.find({}));
+    // console.log(req.query);
+    
+    res.send( await flights.find(req.query));
+})
+
+app.get('/flight/:id' , async(req,res,nex ) => {
+    console.log(req.params);
+    res.send( await flights.findById(req.params.id));
 })
 
 
