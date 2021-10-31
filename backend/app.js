@@ -1,3 +1,4 @@
+
 const express = require("express");
 const mongoose = require('mongoose');
 const flights = require('./models/flight')
@@ -7,6 +8,7 @@ const MongoURI = 'mongodb+srv://newUser:BoVfIDwrkeEF1Muv@cluster0.glusa.mongodb.
 
 //App variables
 const app = express();
+app.use(express.urlencoded({ extended: true }));
 const port = process.env.PORT || "8000";
 
 // #Importing the userController
@@ -36,9 +38,19 @@ app.get('/flight/:id' , async(req,res,nex ) => {
     res.send( await flights.findById(req.params.id));
 })
 
+app.delete('/flight/:id', async (req, res) => {
+
+   await flights.findByIdAndDelete(req.params.id);
+   res.redirect('/flight');
+})
 
 
-
+app.put('/flight/:id', async (req, res) => {
+    // const updatedFlight = req.body.Seats;
+    console.log(req.body)
+    // await flights.findByIdAndUpdate(req.params.id, updatedFlight);
+    res.redirect('/flight');
+ })
 
 
 app.listen(port, () => {
