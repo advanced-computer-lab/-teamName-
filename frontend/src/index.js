@@ -1,19 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+import FlightDetails from './flights/components/flightdetails';
+import FlightList from './flights/components/flightList'
+
 
 function Greeting() {
-  const users = async () => {
-    return (await fetch('http://localhost:8000/flight'));
-  }
-  let flights = users().then(() => {
-    console.log(this)
-  })
+  let [flight, setFlights] = useState();
+  useEffect(() => {
+    const sendRequest = async () => {
+      const flights = await fetch('http://localhost:8000/flight');
+      const flightsJson = await flights.json();
 
+      setFlights(flightsJson.reqFlights);
+    };
+    sendRequest();
+  }, [])
 
   return (
-    <h1 className='display-1'>
-      Hello World
-    </h1>
+    <Router>
+      <Route path='/flights' exact>
+        
+         
+          {flight && <FlightList items={flight} />}
+        
+      </Route>
+      <Route path='/' exact>
+        
+          
+          <a href="/flights" className="display-3">Flights</a>
+        
+      </Route>
+      <Route path='/flights/:id' exact>
+        <FlightDetails />
+
+      </Route>
+    </Router>
   )
 }
 
