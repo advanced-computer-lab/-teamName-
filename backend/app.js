@@ -1,6 +1,7 @@
 
 const express = require("express");
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser')
 const flights = require('./models/flight')
 // THIS IS WRONG NEVER DO THAT !! Only for the task we put the DB Link here!! NEVER DO THAAAT AGAIN !!
 const MongoURI = 'mongodb+srv://newUser:BoVfIDwrkeEF1Muv@cluster0.glusa.mongodb.net/ACL?retryWrites=true&w=majority' ;
@@ -8,7 +9,8 @@ const MongoURI = 'mongodb+srv://newUser:BoVfIDwrkeEF1Muv@cluster0.glusa.mongodb.
 
 //App variables
 const app = express();
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: false }));
+// app.use(express.json())
 const port = process.env.PORT || "8000";
 
 app.use((req,res,next) => {
@@ -16,7 +18,6 @@ app.use((req,res,next) => {
     res.setHeader('Access-Control-Allow-Headers' , '*')
     res.setHeader('Access-Control-Allow-Methods' , '*')
     next();
-
 })
 // #Importing the userController
 
@@ -30,19 +31,22 @@ mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 
 app.get('/' , (req, res , next ) => {
-    res.send('HI')
+    // console.log('hi')
+    // res.json('HI')
 })
 
 
 app.get('/flight' , async(req, res,next ) => {
     // console.log(req.query);
+    // console.log('here')
+    const reqFlights = await flights.find(req.query)
+    res.json( {reqFlights : reqFlights.map( flight => flight.toObject({getters: true })) });
     
-    res.send( await flights.find(req.query));
 })
 
 app.get('/flight/:id' , async(req,res,nex ) => {
-    console.log(req.params);
-    res.send( await flights.findById(req.params.id));
+    // console.log(req.params);
+    res.json({ flight : await flights.findById(req.params.id)});
 })
 
 app.delete('/flight/:id', async (req, res) => {
@@ -54,7 +58,11 @@ app.delete('/flight/:id', async (req, res) => {
 
 app.put('/flight/:id', async (req, res) => {
     // const updatedFlight = req.body.Seats;
+<<<<<<< HEAD
     console.log(req.body)
+=======
+    // console.log(req.body)
+>>>>>>> aebdaf4839ca0d324944367cdfc00a4fa2bef21b
     await flights.findByIdAndUpdate(req.params.id, req.body);
     res.redirect('/flight');
  })
