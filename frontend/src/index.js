@@ -1,27 +1,3 @@
-<<<<<<< HEAD
-import React,{useState,useEffect} from 'react';
-import ReactDOM from 'react-dom';
-import axios from 'axios';
-
-
-function Greeting() {
-
-    const [flights,setflights]= useState([]);
-
-    useEffect(() => {
-        axios.get('http://localhost:8000/flight').then(res =>{
-          setflights(res.data);
-        });
-    
-      },[])
-
-      console.log(flights);
-
-  return (
-    <h1 className="display-1">
-        Hello World
-    </h1>
-=======
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -60,7 +36,6 @@ function Greeting() {
 
       </Route>
     </Router>
->>>>>>> aebdaf4839ca0d324944367cdfc00a4fa2bef21b
   )
 }
 
