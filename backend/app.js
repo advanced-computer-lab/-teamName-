@@ -11,6 +11,13 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 const port = process.env.PORT || "8000";
 
+app.use((req,res,next) => {
+    res.setHeader('Access-Control-Allow-Origin' , '*')
+    res.setHeader('Access-Control-Allow-Headers' , '*')
+    res.setHeader('Access-Control-Allow-Methods' , '*')
+    next();
+
+})
 // #Importing the userController
 
 
@@ -48,7 +55,7 @@ app.delete('/flight/:id', async (req, res) => {
 app.put('/flight/:id', async (req, res) => {
     // const updatedFlight = req.body.Seats;
     console.log(req.body)
-    // await flights.findByIdAndUpdate(req.params.id, updatedFlight);
+    await flights.findByIdAndUpdate(req.params.id, req.body);
     res.redirect('/flight');
  })
 
