@@ -10,7 +10,7 @@ const MongoURI = 'mongodb+srv://newUser:BoVfIDwrkeEF1Muv@cluster0.glusa.mongodb.
 //App variables
 const app = express();
 // app.use(express.urlencoded({ extended: false }));
-// app.use(express.json())
+app.use(express.json())
 const port = process.env.PORT || "8000";
 
 app.use((req,res,next) => {
@@ -36,10 +36,11 @@ app.get('/' , (req, res , next ) => {
 })
 
 
-app.get('/flight' , async(req, res,next ) => {
+app.post('/flight' , async(req, res,next ) => {
     // console.log(req.query);
-    // console.log('here')
-    const reqFlights = await flights.find(req.query)
+    console.log('here')
+    console.log(req.body)
+    const reqFlights = await flights.find(req.body)
     res.json( {reqFlights : reqFlights.map( flight => flight.toObject({getters: true })) });
     
 })

@@ -20,9 +20,14 @@ const FlightItem = (props) => {
                     <h2 className="display-5">{props.Cabin}</h2>
                 </div>
             </div>
-            <div className='row'>
-                <div className="col-6 offset-3">
+            <div className='row justify-content-center'>
+                <div className="col-3 text-center">
                     <a className="btn btn-outline-primary" href={'/flights/'.concat(props.id)}>Details</a>
+                </div>
+                <div className="col-3 text-center">
+                    <form action="" method="delete">
+                        <a className="btn btn-outline-primary" href={'/flights/'.concat(props.id)}>Delete</a>
+                    </form>
                 </div>
             </div>
         </li>
