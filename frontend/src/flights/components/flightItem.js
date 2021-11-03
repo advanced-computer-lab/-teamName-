@@ -1,6 +1,7 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 
 const FlightItem = (props) => {
+
     return (
         <li>
             <div className="row">
@@ -20,9 +21,12 @@ const FlightItem = (props) => {
                     <h2 className="display-5">{props.Cabin}</h2>
                 </div>
             </div>
-            <div className='row justify-content-center'>
-                <div className="col-3 text-center">
-                    <a className="btn btn-outline-primary" href={'/flights/'.concat(props.id)}>Details</a>
+            <div className='row'>
+                <div className="col-6 offset-3">
+                <form onSubmit={async ()=> await fetch(`http://localhost:8000/flight/${props.id}`, { method: 'DELETE'})}>
+                    <button type="submit" className="btn btn-outline-primary">Delete</button>
+                </form>
+                <a className="btn btn-outline-primary" href={'/flights/'.concat(props.id)}>Details</a>
                 </div>
                 <div className="col-3 text-center">
                     <form action="" method="delete">

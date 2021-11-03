@@ -53,13 +53,12 @@ app.get('/flight/:id' , async(req,res,nex ) => {
 app.delete('/flight/:id', async (req, res) => {
 
    await flights.findByIdAndDelete(req.params.id);
+   console.log('ho')
    res.redirect('/flight');
 })
 
 
 app.put('/flight/:id', async (req, res) => {
-    // const updatedFlight = req.body.Seats;
-    // console.log(req.body)
     await flights.findByIdAndUpdate(req.params.id, req.body);
     res.redirect('/flight');
  })
