@@ -1,7 +1,8 @@
 
 const express = require("express");
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser')
+const moment = require('moment');
+
 const flights = require('./models/flight')
 // THIS IS WRONG NEVER DO THAT !! Only for the task we put the DB Link here!! NEVER DO THAAAT AGAIN !!
 const MongoURI = 'mongodb+srv://newUser:BoVfIDwrkeEF1Muv@cluster0.glusa.mongodb.net/ACL?retryWrites=true&w=majority' ;
@@ -38,10 +39,22 @@ app.get('/' , (req, res , next ) => {
 
 app.post('/flight' , async(req, res,next ) => {
     // console.log(req.query);
-    console.log('here')
-    console.log(req.body)
-    const reqFlights = await flights.find(req.body)
-    res.json( {reqFlights : reqFlights.map( flight => flight.toObject({getters: true })) });
+    
+    let reqFlights = await flights.find(req.body)
+    let modifiedFlights = [];
+    reqFlights.forEach(flight => {
+        let modifiedFlight = flight;
+        const formatted_date = moment(flight.Date).format('YYYY-MM-DD');
+        // console.log(formatted_date)
+        modifiedFlight.newDate = formatted_date; 
+        // console.log(modifiedFlight)
+    })
+    // console.log(reqFlights)
+    res.json( {reqFlights : reqFlights.map( flight => {
+        
+        
+       return flight.toObject({getters: true })
+     } ) });
     
 })
 
@@ -59,8 +72,13 @@ app.delete('/flight/:id', async (req, res) => {
 
 
 app.put('/flight/:id', async (req, res) => {
+    
     await flights.findByIdAndUpdate(req.params.id, req.body);
-    res.redirect('/flight');
+    console.log('jk')
+    return res.status(200).json({
+        success:true,
+        redirectUrl: '/flights'
+    })
  })
 
 

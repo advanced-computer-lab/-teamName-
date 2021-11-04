@@ -3,9 +3,7 @@ import { useLocation, useHistory } from 'react-router-dom'
 import FlightList from '../components/flightList'
 
 const Flights = () => {
-    const query = useLocation();
-    const history = useHistory();
-    let params = ''
+
 
     const [searchParams, setParams] = useState({})
     const search = (event) => {
@@ -20,7 +18,7 @@ const Flights = () => {
 
         setParams(data)
         console.log(searchParams)
-      
+
 
     }
 

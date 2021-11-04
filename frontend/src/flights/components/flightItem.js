@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React, { useEffect } from 'react'
 
 const FlightItem = (props) => {
 
@@ -23,16 +23,12 @@ const FlightItem = (props) => {
             </div>
             <div className='row'>
                 <div className="col-6 offset-3">
-                <form onSubmit={async ()=> await fetch(`http://localhost:8000/flight/${props.id}`, { method: 'DELETE'})}>
-                    <button type="submit" className="btn btn-outline-primary">Delete</button>
-                </form>
-                <a className="btn btn-outline-primary" href={'/flights/'.concat(props.id)}>Details</a>
-                </div>
-                <div className="col-3 text-center">
-                    <form action="" method="delete">
-                        <a className="btn btn-outline-primary" href={'/flights/'.concat(props.id)}>Delete</a>
+                    <form onSubmit={async () => await fetch(`http://localhost:8000/flight/${props.id}`, { method: 'DELETE' })}>
+                        <button type="submit" className="btn btn-outline-primary">Delete</button>
                     </form>
+                    <a className="btn btn-outline-primary" href={'/flights/'.concat(props.id)}>Details</a>
                 </div>
+
             </div>
         </li>
     )

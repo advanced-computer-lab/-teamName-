@@ -11,7 +11,7 @@ function Greeting() {
 
   return (
     <Router>
-      <Route path='/flights/' >
+      <Route path='/flights/' exact>
         
          
            <Flights/>
@@ -20,7 +20,7 @@ function Greeting() {
       <Route path='/' exact>
         
           
-          <a href="/flights/?" className="display-3">Flights</a>
+          <a href="/flights/" className="display-3">Flights</a>
         
       </Route>
       <Route path='/flights/:id' exact>
