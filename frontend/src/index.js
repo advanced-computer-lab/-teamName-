@@ -20,16 +20,15 @@ function Greeting() {
   return (
     <Router>
       <Route path='/flights' exact>
-        
-         
-          {flight && <FlightList items={flight} />}
-        
+
+
+        {flight && <FlightList items={flight} />}
+
       </Route>
       <Route path='/' exact>
-        
-          
-          <a href="/flights" className="display-3">Flights</a>
-        
+
+
+        <a href="/flights" className="display-3">Flights</a>
       </Route>
       <Route path='/flights/:id' exact>
         <FlightDetails />
