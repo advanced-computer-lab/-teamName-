@@ -9,8 +9,8 @@ const MongoURI = 'mongodb+srv://newUser:BoVfIDwrkeEF1Muv@cluster0.glusa.mongodb.
 
 //App variables
 const app = express();
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json())
+//  app.use(express.urlencoded({ extended: false }));
+ app.use(express.json())
 const port = process.env.PORT || "8000";
 
 app.use((req,res,next) => {
@@ -43,6 +43,23 @@ app.get('/flight' , async(req, res,next ) => {
     res.json( {reqFlights : reqFlights.map( flight => flight.toObject({getters: true })) });
     
 })
+
+app.post("/flight",async(req,res)=>{
+   await flights.create({
+    FlightNumber:req.body.FlightNumber,
+    DepartureDate:req.body.DepartureDate,
+    ArrivalDate:req.body.ArrivalDate ,
+    EconomySeats:req.body.EconomySeats ,
+    BusinessSeats:req.body.BusinessSeats,
+    AirPort:req.body.AirPort
+
+    });
+    flights.find({FlightNumber:1},function(err,q){return res.send(q)});
+    console.log('test');
+} 
+
+);
+
 
 app.get('/flight/:id' , async(req,res,nex ) => {
     // console.log(req.params);
