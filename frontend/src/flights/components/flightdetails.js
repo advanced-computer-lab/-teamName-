@@ -64,7 +64,7 @@ const FlightDetails = ({ props }) => {
                     </div>
                     <div className="col-3">
                         <h1 className="display-5">Date</h1>
-                        <input type="text" name="" id="" value={form && form.Date} onChange={(e) => setForm({ ...form, Date: e.target.value })} />
+                        <input type="date" name="" id="" value={form && form.Date} onChange={(e) => setForm({ ...form, Date: e.target.value })} />
 
                     </div>
 
@@ -72,7 +72,7 @@ const FlightDetails = ({ props }) => {
                 <div className="row">
                     <div className="col-3">
                         <h1 className="display-5">Seats</h1>
-                        <input type="text" name="" id="" value={form && form.Seats} onChange={(e) => setForm({ ...form, Seats: e.target.value })} />
+                        <input type="number" name="" id="" value={form && form.Seats} onChange={(e) => setForm({ ...form, Seats: e.target.value })} />
                     </div>
                     <div className="col-3">
                         <h1 className="display-5">Cabin</h1>

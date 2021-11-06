@@ -6,7 +6,7 @@ import FlightItem from './flightItem';
 function removeEmptyVariables(obj) {
   for (let i in obj) {
     if (!obj[i]) {
-     
+
       delete obj[i]
     }
   }
@@ -16,23 +16,29 @@ function removeEmptyVariables(obj) {
 
 function FlightList(props) {
   const query = useLocation()
-  
-  const bodyJ = removeEmptyVariables(props.query)
-  
-  //  console.log(query , props.query)
-  let [flights, setFlights] = useState();
 
+  const bodyJ = removeEmptyVariables(props.query)
+
+
+  let [flights, setFlights] = useState();
+  const updateFlights = (id) => {
+    setFlights(flights.filter((flight) => {
+      if (flight.id != id) {
+        return true
+      }
+    }))
+  }
   useEffect(() => {
 
     const sendRequest = async () => {
       const reqflights = await fetch('http://localhost:8000/flight/', {
-        method: 'POST' ,
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(bodyJ)
       })
-      
+
       const flightsJson = await reqflights.json();
       console.log(flightsJson)
       setFlights(flightsJson.reqFlights);
@@ -53,6 +59,7 @@ function FlightList(props) {
             Date={flight.Date}
             Cabin={flight.Cabin}
             Seats={flight.Seats}
+            Update = {updateFlights}
           />
         )}
       </ul>
