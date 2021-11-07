@@ -1,27 +1,35 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
-import {useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 const FlightNew = () => {
     let [form, setForm] = useState({
         From: '',
         To: '',
-        Seats: '',
-        Cabin: '',
-        Date: '',
+        BusinessSeats: '',
+        EconomySeats: '',
+        ArrivalDate: '',
+        DepartureDate: '',
+        FlightNumber: '',
 
     });
     let history = useHistory();
-    
+
     const inputHandler = (id, value) => {
-        setForm(formState => ({
-            ...formState,
+        setForm(form => ({
+            ...form,
             [id]: value,
         }));
     };
     const onSubmitHandler = async e => {
         console.log(form)
-        // await axios.post('')
+
+        await axios.post('http://localhost:8000/admin/newflight/',
+            JSON.stringify(form)
+            , {
+            headers: { 'Content-Type': 'application/json' },
+
+        });
         history.push('/flights')
     }
 
@@ -34,6 +42,11 @@ const FlightNew = () => {
                 }}>
                     <div className="row">
                         <div className="col-3">
+                            <h1 className="display-5">Flight number</h1>
+                            <input type="number" name="" id="" onChange={e => inputHandler('FlightNumber', e.target.value)} />
+
+                        </div>
+                        <div className="col-3">
 
                             <h1 className="display-5">From</h1>
                             <input type="text" name="" id="" onChange={e => inputHandler('From', e.target.value)} />
@@ -44,21 +57,30 @@ const FlightNew = () => {
                             <input type="text" name="" id="" onChange={e => inputHandler('To', e.target.value)} />
 
                         </div>
-                        <div className="col-3">
-                            <h1 className="display-5">Date</h1>
-                            <input type="date" name="" id="" onChange={e => inputHandler('Date', e.target.value)} />
 
+
+                    </div>
+                    <div className="row">
+                        <div className="col-4">
+                            <h1 className="display-5">Departure Date</h1>
+                            <input type="date" name="" id="" onChange={e => inputHandler('DepartureDate', e.target.value)} />
                         </div>
+                        <div className="col-4">
+                            <h1 className="display-5">Arrival Date</h1>
+                            <input type="date" name="" id="" onChange={e => inputHandler('ArrivalDate', e.target.value)} />
+                        </div>
+
+
 
                     </div>
                     <div className="row">
                         <div className="col-3">
-                            <h1 className="display-5">Seats</h1>
-                            <input type="text" name="" id="" onChange={e => inputHandler('Seats', e.target.value)} />
+                            <h1 className="display-5">Business Seats</h1>
+                            <input type="number" name="" id="" onChange={e => inputHandler('BusinessSeats', e.target.value)} />
                         </div>
                         <div className="col-3">
-                            <h1 className="display-5">Cabin</h1>
-                            <input type="text" name="" id="" onChange={e => inputHandler('Cabin', e.target.value)} />
+                            <h1 className="display-5">Economy Seats</h1>
+                            <input type="number" name="" id="" onChange={e => inputHandler('EconomySeats', e.target.value)} />
                         </div>
                         <div className="col-3">
                             <button type="submit" className="btn btn-outline-success"> Create </button>

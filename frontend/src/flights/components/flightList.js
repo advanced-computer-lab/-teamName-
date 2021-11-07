@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams, useLocation } from 'react-router-dom'
-
+import axios from 'axios'
 import ReactDOM from 'react-dom';
 import FlightItem from './flightItem';
 function removeEmptyVariables(obj) {
@@ -10,7 +10,7 @@ function removeEmptyVariables(obj) {
       delete obj[i]
     }
   }
-  console.log(obj)
+ 
   return obj
 }
 
@@ -22,26 +22,32 @@ function FlightList(props) {
 
   let [flights, setFlights] = useState();
   const updateFlights = (id) => {
-    setFlights(flights.filter((flight) => {
-      if (flight.id != id) {
-        return true
+    let newFlights = flights.filter((flight) => {
+
+      if (flight._id == id) {
+        console.log(flight)
+        return false;
       }
-    }))
+      else {
+        
+        return true;
+      }
+    })
+
+    setFlights(newFlights);
   }
   useEffect(() => {
 
     const sendRequest = async () => {
-      const reqflights = await fetch('http://localhost:8000/flight/', {
-        method: 'POST',
+      const reqflights = await axios.post('http://localhost:8000/admin/flight/',
+        JSON.stringify(bodyJ), {
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(bodyJ)
-      })
+        }
+      });
 
-      const flightsJson = await reqflights.json();
-      console.log(flightsJson)
-      setFlights(flightsJson.reqFlights);
+      console.log(reqflights.data);
+      setFlights(reqflights.data.reqFlights);
     };
     sendRequest();
   }, [props.query])
@@ -52,14 +58,16 @@ function FlightList(props) {
       <ul>
         {flights && flights.map(flight =>
           <FlightItem
-            id={flight._id}
             key={flight._id}
+            id={flight._id}
+            FlightNumber={flight.FlightNumber}
             From={flight.From}
             To={flight.To}
-            Date={flight.Date}
-            Cabin={flight.Cabin}
-            Seats={flight.Seats}
-            Update = {updateFlights}
+            ArrivalDate={flight.ArrivalDate}
+            DepartureDate={flight.DepartureDate}
+            EconomySeats={flight.EconomySeats}
+            BusinessSeats={flight.BusinessSeats}
+            Update={updateFlights}
           />
         )}
       </ul>

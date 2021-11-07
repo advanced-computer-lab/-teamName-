@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
-const config = require("auth.config.js");
+const config = require("./auth.config");
 const admin = require("../models/admin");
-const config = require("../utils/auth.config.js");
+
+
 module.exports.verifyToken = verifyToken = (req, res, next) => {
     let token = req.headers["x-access-token"];
 
@@ -27,4 +28,5 @@ module.exports.isAdmin = isAdmin = (req, res, next) => {
 
 
     });
+    next();
 };

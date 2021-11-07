@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React  from 'react';
 
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route , useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import FlightDetails from './flights/components/flightdetails';
-import FlightList from './flights/components/flightList'
+
 import FlightNew from './flights/components/flightNew'
 import Flights from './flights/pages/Flights'
 
-function Greeting() {
+function Home() {
   
 
   return (
@@ -42,7 +42,7 @@ function Greeting() {
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-ReactDOM.render(<Greeting />, document.getElementById('root'))
+ReactDOM.render(<Home />, document.getElementById('root'))
 
 
 

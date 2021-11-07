@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
+if (process.env.NODE_ENV !== "production") {
+    require('../dotenv').config({ path: '../.env' });
+}
 const flight = require('../models/flight.js');
 const admin = require('../models/admin.js');
 const flights = require('./seeds.js');
-const MongoURI = 'mongodb+srv://newUser:BoVfIDwrkeEF1Muv@cluster0.glusa.mongodb.net/ACL?retryWrites=true&w=majority' ;
+const MongoURI = process.env.DBurl ;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
