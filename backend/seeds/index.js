@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
+if (process.env.NODE_ENV !== "production") {
+    require('../dotenv').config({ path: '../.env' });
+}
 const flight = require('../models/flight.js');
 const admin = require('../models/admin.js');
 const flights = require('./seeds.js');
-const MongoURI = 'mongodb+srv://newUser:BoVfIDwrkeEF1Muv@cluster0.glusa.mongodb.net/ACL?retryWrites=true&w=majority' ;
+const MongoURI = process.env.DBurl ;
+var jwt = require("jsonwebtoken");
+var bcrypt = require("bcryptjs");
+
 
 mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(result =>console.log("MongoDB is now connected") )
@@ -12,20 +18,14 @@ const seedDB = async () => {
     await flight.deleteMany({});
     await admin.deleteMany({});
     flights.forEach (async(e)=> {
-        const Flight = new flight ( {
-            From : e.From ,
-            To : e.To ,
-            Date : e.Date,
-            Cabin : e.Cabin,
-            Seats : e.Seats 
-        });
+        const Flight = new flight ( e);
         await Flight.save();
     })
     const Username = 'Admin'; 
     const Password = '1234' ; 
     const Admin = new admin ({
         username : Username ,
-        password : Password ,
+        password : bcrypt.hashSync(Password ,8)
     }) ;
     await Admin.save();
 }

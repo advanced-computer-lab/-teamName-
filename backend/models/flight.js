@@ -2,39 +2,36 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-const flightsSchema = new Schema({ 
-  
-    
+const flightsSchema = new Schema({
+
+
     FlightNumber: {
-        type : Number
-       
+        type: Number
+
     },
-    DepartureDate : {
-        type : Date
-       
+    DepartureDate: {
+        type: Date
+
     },
-    ArrivalDate : {
-        type : Date
-       
+    ArrivalDate: {
+        type: Date
+
     },
-//     DepartureTime : {
-//        type : longTime
-       
-//    },
-   // ArrivalTime : {
-    //    type : Date
-       
-  //  },
- 
-    EconomySeats : {
-        type : Number
+
+    EconomySeats: {
+        type: Number
     },
-   BusinessSeats : {
-        type : Number
+    BusinessSeats: {
+        type: Number
     },
-    AirPort: {
-        type : String 
-       
-    }});
+    From: {
+        type: String
+
+    },
+    To: {
+        type: String
+
+    }
+});
 
 module.exports = mongoose.model('Flight', flightsSchema);
