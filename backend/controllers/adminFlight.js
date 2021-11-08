@@ -46,7 +46,7 @@ exports.login =  (req, res, next) => {
         });
 }
 exports.searchFlights = async (req, res, next) => {
-    
+    console.log(req.body)
     let reqFlights = await flights.find(req.body)
     let modifiedFlights = [];
     for (let i = 0; i < reqFlights.length; i++) {
@@ -93,7 +93,7 @@ exports.flightDetails =  async (req, res, nex) => {
     res.json({ flight: newFlight });
 }
 exports.updateFlight =  async (req, res) => {
-
+    console.log(req.body)
     await flights.findByIdAndUpdate(req.params.id, req.body);
     console.log('jk')
     return res.status(200).json({

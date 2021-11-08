@@ -10,14 +10,28 @@ function removeEmptyVariables(obj) {
       delete obj[i]
     }
   }
- 
+
   return obj
 }
 
 function FlightList(props) {
   const query = useLocation()
+  let body = props.query;
+  let body2;
+  if (body.ArrivalDate) {
+    body2 = {
+      ...body,
+      ['ArrivalDate']: new Date(body.ArrivalDate).toISOString(),
+    }
+  }
+  if (body.DepartureDate) {
+    body2 = {
+      ...body,
+      ['DepartureDate']: new Date(body.DepartureDate).toISOString()
+    }
+  }
 
-  const bodyJ = removeEmptyVariables(props.query)
+  const bodyJ = removeEmptyVariables(body2)
 
 
   let [flights, setFlights] = useState();
@@ -29,7 +43,7 @@ function FlightList(props) {
         return false;
       }
       else {
-        
+
         return true;
       }
     })
@@ -37,7 +51,7 @@ function FlightList(props) {
     setFlights(newFlights);
   }
   useEffect(() => {
-
+    console.log('flightlist', bodyJ);
     const sendRequest = async () => {
       const reqflights = await axios.post('http://localhost:8000/admin/flight/',
         JSON.stringify(bodyJ), {
@@ -46,7 +60,7 @@ function FlightList(props) {
         }
       });
 
-      console.log(reqflights.data);
+
       setFlights(reqflights.data.reqFlights);
     };
     sendRequest();

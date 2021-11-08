@@ -23,7 +23,9 @@ const Flights = () => {
     };
     const [searchParams, setParams] = useState({})
     const search = (event) => {
+        
         setParams(form)
+        console.log("Form in flight" , form);
     }
     return (
         <div className='row container-fluid mt-3'>
@@ -70,7 +72,6 @@ const Flights = () => {
                                 <label htmlFor="Date" className="form-label">ِArrival Date</label>
                                 <input type="date" className='form-control' id='ArrivalDate' name="ArrivalDate" onChange={e => inputHandler('ArrivalDate', e.target.value)} />
                             </div>
-
                         </div>
                         <div className="card-footer">
                             <button type="submit" className='btn btn-success'>Search</button>
