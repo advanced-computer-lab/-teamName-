@@ -25,7 +25,9 @@ const FlightNew = () => {
         console.log(form)
 
         await axios.post('http://localhost:8000/admin/newflight/',
-            JSON.stringify(form)
+            JSON.stringify({...form , 
+                ['ArrivalDate']: new Date(form.ArrivalDate).toISOString(),
+                ['DepartureDate']: new Date(form.DepartureDate).toISOString()})
             , {
             headers: { 'Content-Type': 'application/json' },
 
