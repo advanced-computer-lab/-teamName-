@@ -31,8 +31,11 @@ const FlightDetails = ({ props }) => {
         if (event) {
             console.log(form, api)
         }
+        let submitForm = {...form ,
+            ['ArrivalDate']: new Date(form.ArrivalDate).toISOString(),
+            ['DepartureDate']: new Date(form.DepartureDate).toISOString()}
         await axios.put(('http://localhost:8000/admin/flight/').concat(id),
-            JSON.stringify(form),
+            JSON.stringify(submitForm),
             {
                 headers: {
                     'Content-Type': 'application/json'

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 if (process.env.NODE_ENV !== "production") {
-    require('../dotenv').config({ path: '../.env' });
+    require('dotenv').config({ path: '../.env' });
 }
 const flight = require('../models/flight.js');
 const admin = require('../models/admin.js');
