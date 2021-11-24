@@ -3,14 +3,14 @@ const moment = require('moment');
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const flights = require('../models/flight')
-const admin = require('../models/admin')
+const user = require('../models/user')
 const config = require("../utils/auth.config.js");
 const catchAsync = require('../utils/catchAsync')
 
 
 exports.login =  (req, res, next) => {
     console.log('here')
-    admin.findOne({
+    user.findOne({
         username: req.body.username
     })
         .exec((err, user) => {
@@ -41,6 +41,7 @@ exports.login =  (req, res, next) => {
             res.status(200).send({
                 id: user._id,
                 username: user.username,
+                role : user.role ,
                 accessToken: token
             });
         });
