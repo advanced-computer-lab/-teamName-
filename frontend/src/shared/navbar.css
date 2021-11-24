@@ -1,0 +1,28 @@
+/* #3c88c7 2e74ab a1c4ec */
+.custom-border-fill {
+    background : #a1c4ec25  ; 
+    border-bottom-left-radius : 10px ;
+    border-bottom-right-radius : 10px ;
+    box-shadow: 0px 1px 15px 2px #3c88c7c2;
+
+}
+.flightBrand {
+    max-width: 50px;
+    animation: fly  2s ease-in-out 0.25s infinite ;
+}
+.links {
+    font-family: 'Raleway';
+    font-size: 1.4rem ;
+    font-weight: 700; 
+    color: #000 ;
+    transition: all 0.20s ease-in-out;
+   
+    margin-left: 1em ;
+}
+.links:hover {
+    transform: scale(1.2);
+    margin-right: 1.4em ; 
+    margin-left: 1.4em ;
+
+
+}

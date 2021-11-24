@@ -14,7 +14,7 @@ function Home() {
   return (
     <Router>
       <Route path='/flights/' exact>
-        <Flightnavbar />
+        
 
         <Flights />
 
