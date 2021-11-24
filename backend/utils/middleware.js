@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const config = require("./auth.config");
-const admin = require("../models/admin");
+const user = require("../models/user");
 
 
 module.exports.verifyToken = verifyToken = (req, res, next) => {
@@ -19,10 +19,35 @@ module.exports.verifyToken = verifyToken = (req, res, next) => {
     });
 };
 module.exports.isAdmin = isAdmin = (req, res, next) => {
-    admin.find({ 'username': req.body.username }).exec((err, user) => {
+    user.find({ 'username': req.body.username }).exec((err, user) => {
         if (err) {
             res.status(500).send({ message: err });
             return;
+        }
+        else {
+            if (user.role === 'Admin'){
+                res.status(500).send({ message: "Not Authorized" });
+                return;
+            }
+        }
+
+
+
+    });
+    next();
+};
+
+module.exports.isUser = isUser = (req, res, next) => {
+    user.find({ 'username': req.body.username }).exec((err, user) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+        else {
+            if (user.role === 'User'){
+                res.status(500).send({ message: "Not Authorized" });
+                return;
+            }
         }
 
 

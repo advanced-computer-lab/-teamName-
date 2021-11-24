@@ -23,9 +23,11 @@ const seedDB = async () => {
     })
     const Username = 'Admin'; 
     const Password = '1234' ; 
+    const Role = 'Admin';
     const Admin = new admin ({
         username : Username ,
-        password : bcrypt.hashSync(Password ,8)
+        password : bcrypt.hashSync(Password ,8),
+        role : Role 
     }) ;
     await Admin.save();
 }

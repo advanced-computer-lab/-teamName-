@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
+import Pagination from '../../shared/pagination'
 import FlightList from '../components/flightList'
-
+import Flightnavbar from '../../shared/Flightnavbar'
 const Flights = () => {
 
     let [form, setForm] = useState({
@@ -23,11 +24,12 @@ const Flights = () => {
     };
     const [searchParams, setParams] = useState({})
     const search = (event) => {
-        
+
         setParams(form)
-        console.log("Form in flight" , form);
+
     }
     return (
+
         <div className='row container-fluid mt-3'>
             <div className="col-3">
                 <form action="" onSubmit={(e) => {
@@ -81,8 +83,10 @@ const Flights = () => {
             </div>
             <div className="col-8 w-75">
                 {<FlightList query={searchParams} />}
+
             </div>
         </div>
+
     )
 }
 

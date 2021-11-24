@@ -7,7 +7,7 @@ const moment = require('moment');
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const flights = require('./models/flight')
-const admin = require('./models/admin')
+const admin = require('./models/user')
 const config = require("./utils/auth.config.js");
 // THIS IS WRONG NEVER DO THAT !! Only for the task we put the DB Link here!! NEVER DO THAAAT AGAIN !!
 const MongoURI = process.env.DBurl;
@@ -40,6 +40,8 @@ app.get('/', (req, res, next) => {
 const adminRoutes = require('./routes/admin.routes')
 app.use('/admin', adminRoutes);
 
+const userRoutes = require('./routes/user.routes')
+app.use('/user' , userRoutes);
 
 
 app.listen(port, () => {

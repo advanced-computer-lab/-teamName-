@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useParams, useLocation } from 'react-router-dom'
-import axios from 'axios'
-import ReactDOM from 'react-dom';
+import axios from 'axios' ;
+
+
+
+import './flightlist.css'
 import FlightItem from './flightItem';
 function removeEmptyVariables(obj) {
   for (let i in obj) {
-    if (!obj[i]) {
+    if (obj[i] == '') {
 
       delete obj[i]
     }
@@ -15,9 +17,9 @@ function removeEmptyVariables(obj) {
 }
 
 function FlightList(props) {
-  const query = useLocation()
+
   let body = props.query;
-  let body2;
+  let body2 = body;
   if (body.ArrivalDate) {
     body2 = {
       ...body,
@@ -31,7 +33,7 @@ function FlightList(props) {
     }
   }
 
-  const bodyJ = removeEmptyVariables(body2)
+  // const bodyJ = removeEmptyVariables(body2)
 
 
   let [flights, setFlights] = useState();
@@ -51,16 +53,14 @@ function FlightList(props) {
     setFlights(newFlights);
   }
   useEffect(() => {
-    console.log('flightlist', bodyJ);
+
     const sendRequest = async () => {
       const reqflights = await axios.post('http://localhost:8000/admin/flight/',
-        JSON.stringify(bodyJ), {
+        JSON.stringify(body2), {
         headers: {
           'Content-Type': 'application/json'
         }
       });
-
-
       setFlights(reqflights.data.reqFlights);
     };
     sendRequest();
@@ -69,7 +69,7 @@ function FlightList(props) {
   return (
     <div className='container'>
       <h1 className='display-4'>Flights:</h1>
-      <ul>
+      <ul className='flightList'>
         {flights && flights.map(flight =>
           <FlightItem
             key={flight._id}
