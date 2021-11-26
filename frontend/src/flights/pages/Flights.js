@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useHistory } from 'react-router-dom'
-import Pagination from '../../shared/pagination'
 import FlightList from '../components/flightList'
 import Flightnavbar from '../../shared/Flightnavbar'
-const Flights = () => {
+import '../components/flightlist.css'
+import Carouselitem from '../../shared/Carouselitem'
+const Flights = (props) => {
 
     let [form, setForm] = useState({
         From: '',
@@ -28,16 +28,20 @@ const Flights = () => {
         setParams(form)
 
     }
+    console.log(props)
+  
     return (
         <div>
-            <Flightnavbar />
-            <div className='row container-fluid mt-3'>
+            <Carouselitem />
+            <Flightnavbar  {...props} />
+            
+            <div className='row container-fluid mt-3 worldMap'>
                 <div className="col-3">
                     <form action="" onSubmit={(e) => {
                         e.preventDefault();
                         search(e);
                     }}>
-                        <div className="card">
+                        <div className="card flight-item mt-2 mb-3">
                             <div className="card-header">
                                 <h1 className="display-5">Search Filters</h1>
                             </div>
@@ -83,7 +87,7 @@ const Flights = () => {
                     </form>
                 </div>
                 <div className="col-8 w-75">
-                    {<FlightList query={searchParams} />}
+                    {<FlightList query={searchParams} {...props} />}
 
                 </div>
             </div>

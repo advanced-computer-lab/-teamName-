@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios' ;
+import { useAppContext } from '../../cart.context';
+import axios from 'axios';
 
 
 
@@ -7,7 +8,7 @@ import './flightlist.css'
 import FlightItem from './flightItem';
 function removeEmptyVariables(obj) {
   for (let i in obj) {
-    if (obj[i] == '') {
+    if (obj[i] === '') {
 
       delete obj[i]
     }
@@ -23,17 +24,16 @@ function FlightList(props) {
   if (body.ArrivalDate) {
     body2 = {
       ...body,
-      ['ArrivalDate']: new Date(body.ArrivalDate).toISOString(),
+      ['ArrivalDate']: new Date(`${body.ArrivalDate}T24:00`).toISOString(),
     }
   }
   if (body.DepartureDate) {
     body2 = {
       ...body,
-      ['DepartureDate']: new Date(body.DepartureDate).toISOString()
+      ['DepartureDate']: new Date(`${body.DepartureDate}T24:00`).toISOString()
     }
   }
-
-  // const bodyJ = removeEmptyVariables(body2)
+  removeEmptyVariables(body2)
 
 
   let [flights, setFlights] = useState();
@@ -52,8 +52,9 @@ function FlightList(props) {
 
     setFlights(newFlights);
   }
-  useEffect(() => {
 
+  const appContext = useAppContext()
+  useEffect(() => {
     const sendRequest = async () => {
       const reqflights = await axios.post('http://localhost:8000/admin/flight/',
         JSON.stringify(body2), {
@@ -64,12 +65,40 @@ function FlightList(props) {
       setFlights(reqflights.data.reqFlights);
     };
     sendRequest();
-  }, [props.query])
+  }, [props.query, appContext.cart.returnFlight]);
+
+  
+  const returnFlight = () => {
+    const departure = appContext.cart.departureFlight
+    console.log(departure)
+    if (!flights) {
+      return
+    }
+    if (!departure.To){
+      return
+    }
+    let newFlights = flights.filter((flight) => {
+      if (flight.From === departure.To && flight.To === departure.From) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    })
+    setFlights(newFlights);
+  }
+
+  useEffect(() => {
+    console.log(appContext.cart);
+    returnFlight () 
+  } , [appContext.cart.departureFlight])
+
+  
 
   return (
-    <div className='container'>
-      <h1 className='display-4'>Flights:</h1>
-      <ul className='flightList'>
+    <div className='container '>
+      <h1 className='display-4' id='flights'>Flights:</h1>
+      <ul className='flightList py-3 mt-2 custom-scrollbar-css p-2'>
         {flights && flights.map(flight =>
           <FlightItem
             key={flight._id}
@@ -82,6 +111,8 @@ function FlightList(props) {
             EconomySeats={flight.EconomySeats}
             BusinessSeats={flight.BusinessSeats}
             Update={updateFlights}
+            storage={props}
+            returnFlight={returnFlight}
           />
         )}
       </ul>

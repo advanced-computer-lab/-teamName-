@@ -48,7 +48,8 @@ exports.login =  (req, res, next) => {
 }
 exports.searchFlights = async (req, res, next) => {
     console.log(req.body)
-    let reqFlights = await flights.find(req.body)
+    let reqFlights = await flights.find(req.body);
+    console.log(reqFlights)
     let modifiedFlights = [];
     for (let i = 0; i < reqFlights.length; i++) {
         let newFlight = {

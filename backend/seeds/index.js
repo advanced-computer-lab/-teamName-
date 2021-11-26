@@ -3,7 +3,7 @@ if (process.env.NODE_ENV !== "production") {
     require('dotenv').config({ path: '../.env' });
 }
 const flight = require('../models/flight.js');
-const admin = require('../models/admin.js');
+const admin = require('../models/user.js');
 const flights = require('./seeds.js');
 const MongoURI = process.env.DBurl ;
 var jwt = require("jsonwebtoken");
