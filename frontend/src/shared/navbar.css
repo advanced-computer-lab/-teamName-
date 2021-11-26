@@ -53,3 +53,18 @@
     
     color: green !important; 
 }
+.form-cotrol{
+    width: 300px;
+    margin-left: 50px;
+    border-radius: 2px;
+    border-width: 0.2px;
+    border-color:#3c88c7c2;
+}
+.Modal{
+    border-radius: 2px;
+    border-color:#3c88c7c2;
+    box-shadow: 0px 1px 15px 2px #3c88c7c2;
+}
+.p{
+    margin-left: 50px !important;
+}

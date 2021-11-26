@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const flightsSchema = new Schema(
+const userFlightsSchema = new Schema(
     {
         user : {
             type : Schema.Types.ObjectId, 
@@ -18,4 +18,4 @@ const flightsSchema = new Schema(
 
     }
 )
-module.exports = mongoose.model('Flight', flightsSchema);
+module.exports = mongoose.model('userFlight', userFlightsSchema);
