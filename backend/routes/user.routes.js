@@ -13,16 +13,26 @@ router.get('/hi', (req, res, next) => {
     res.json('HII')
 })
 router.post('/register', async (req, res, next) => {
-    const { Username, Password } = req.body;
-    const newUser = new user(
+    const Username = req.body.username;
+    const Password = req.body.password
+    console.log(req.body)
+    let newUser
+    try {
+         newUser = new user(
         {
             username: Username,
-            password: bcrypt.hashSync(Password ,8)
+            password: bcrypt.hashSync(Password,8),
+            role : 'User'
         });
         await newUser.save() ;
         var token = jwt.sign({ id: user.id }, config.secret, {
             expiresIn: 86400 // 24 hours
         });
+    } catch (error) {
+        console.log(req.body , error) 
+        res.status(500).send(error)
+    }
+    
         res.status(200).send({
             id: newUser._id,
             username: newUser.username,

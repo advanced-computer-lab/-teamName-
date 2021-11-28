@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+let business = [...Array(15).keys()]
+business = business.map((item) => { return (item + 1) })
+
+let economy = [...Array(25).keys()]
+economy = economy.map((item) => { return (item + 1) })
 
 const flightsSchema = new Schema({
 
@@ -19,10 +24,12 @@ const flightsSchema = new Schema({
     },
 
     EconomySeats: {
-        type: Number
+        type: [Number],
+        default : economy
     },
     BusinessSeats: {
-        type: Number
+        type: [Number], 
+        default : business
     },
     From: {
         type: String

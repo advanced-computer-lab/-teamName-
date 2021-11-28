@@ -47,8 +47,14 @@ exports.login =  (req, res, next) => {
         });
 }
 exports.searchFlights = async (req, res, next) => {
-    console.log(req.body)
-    let reqFlights = await flights.find(req.body);
+    let query =req.body
+    if(req.body.BusinessSeats) {
+        query = {...query , "BusinessSeats": { $size: req.body.BusinessSeats }}
+    }
+    if(req.body.EconomySeats) {
+        query = {...query , "EconomySeats": { $size: req.body.EconomySeats }}
+    }
+    let reqFlights = await flights.find(query);
     console.log(reqFlights)
     let modifiedFlights = [];
     for (let i = 0; i < reqFlights.length; i++) {
