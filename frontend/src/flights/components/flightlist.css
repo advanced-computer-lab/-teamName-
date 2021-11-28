@@ -3,21 +3,26 @@
   max-height: 500px;
   overflow-y: scroll;
   padding-right: -6px !important;
+ 
 }
 .worldMap::after {
   content: "";
   opacity: 0.18;
-  top: 650px;
+  top: 660px;
   left: 10px;
-  bottom: -750px;
+  bottom: -650px;
   right: 10px;
   position: absolute;
   z-index: -1;
   background-image: url("../pages/World_map_blank_gmt.svg.png");
   background-color: #ffffff !important;
+  scroll-behavior: smooth;
 }
 .flight-item {
   background-color: rgb(240, 240, 240) !important;
+}
+.display-5{
+  font-weight: 700;
 }
 
 

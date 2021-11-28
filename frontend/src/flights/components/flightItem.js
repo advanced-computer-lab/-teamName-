@@ -29,16 +29,23 @@ const FlightItem = (props) => {
 
     const appContext = useAppContext()
     const reserveFlight = () => {
-        if (appContext.cart.departureFlight.From) {
-            appContext.addCartItem('returnFlight', props)
-            alert('Thank you, You can confirm your reservation from the cart')
-        }
-        else {
-            appContext.addCartItem('departureFlight', props)
-            alert(' please Select the return Flight ')
+        if (appContext.cart.departureFlight.From && appContext.cart.returnFlight.From) {
+           
+            alert('Please clear cart first before making a new reservation')
 
         }
-        console.log(appContext)
+        else {
+            if (appContext.cart.departureFlight.From) {
+                appContext.addCartItem('returnFlight', props)
+                alert('Thank you, You can confirm your reservation from the cart')
+            }
+            else {
+                appContext.addCartItem('departureFlight', props)
+                alert(' please Select the return Flight ')
+
+            }
+        }
+       
     }
 
 
@@ -116,10 +123,10 @@ const FlightItem = (props) => {
                 </div>
                 <div className="row">
                     <div className="col-6">
-                        <h2 className="display-5">Business seats: {props.BusinessSeats}</h2>
+                        <h2 className="display-5">Business seats available: {props.BusinessSeats.length}</h2>
                     </div>
                     <div className="col-6">
-                        <h2 className="display-5">Economy seats: {props.EconomySeats}</h2>
+                        <h2 className="display-5">Economy seats available: {props.EconomySeats.length}</h2>
                     </div>
                 </div>
                 <Modal.Footer>

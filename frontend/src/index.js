@@ -37,6 +37,7 @@ function Home() {
 
           <a href="/flights/" className="display-3">Flights</a>
           <a href='/new/flights/' className='display-3'> Create new Flight</a>
+         
 
         </Route>
         <Route path='/flights/:id' exact>

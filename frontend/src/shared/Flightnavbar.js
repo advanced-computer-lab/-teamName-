@@ -1,20 +1,13 @@
 
 import React, { useState, useEffect } from 'react'
 import { Navbar, Container, Nav, NavDropdown, Modal } from 'react-bootstrap'
-import React, { useState } from 'react'
-import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap'
-import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
-import './navbar.css'
-import { appBarClasses } from '@mui/material';
-import Modal from "react-bootstrap/Modal";
-import ModalBody from "react-bootstrap/ModalBody";
 import ModalHeader from "react-bootstrap/ModalHeader";
 import ModalFooter from "react-bootstrap/ModalFooter";
 import ModalTitle from "react-bootstrap/ModalTitle";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Modalitem from './Modalitem'
+import Cart from './cart'
 import { useAppContext } from '../cart.context';
-
+import axios from 'axios'
 
 
 import './navbar.css'
@@ -41,8 +34,8 @@ const Flightnavbar = (props) => {
     };
 
     const confirmFlight = () => {
-        if (localStorage.getItem('token') && localStorage.getItem('role') === 'User') {
-            // 
+        if (sessionStorage.getItem('token') && sessionStorage.getItem('role') === 'User') {
+            
         }
         else {
             alert('login first to confirm your reservation')
@@ -83,15 +76,34 @@ const Flightnavbar = (props) => {
     const [pcolour2, setpcolour2] = useState('')
 
 
-    function regValidation() {
+    const isLoggedIn = () => {
+        if (!sessionStorage.getItem('role')) {
+            return (
+                <>
+                    <Nav.Link href="#" onClick={handleShow2} className="links">Login</Nav.Link>
+                    <Nav.Link href="#" onClick={handleShow} className="links">Register</Nav.Link>
+                </>)
+        }
+        else {
+            return (<>
+                <Nav.Link href="#" onClick={logOut} className="links">Log out</Nav.Link>
+            </>)
+        }
+    }
+    const [navLinks, setNavLinks] = useState(isLoggedIn)
+    const logOut = () => {
+        sessionStorage.clear();
+        setNavLinks(isLoggedIn());
+    }
+    async function regValidation() {
         var valid = 1
         //username validation
-        if (username.length >= 8) {
+        if (username.length >= 3) {
             seteusername('')
             setucolour('green')
         }
         else {
-            seteusername('username must be atleast 8 characters long')
+            seteusername('username must be atleast 4 characters long')
             setucolour('red')
             valid = 0
         }
@@ -115,8 +127,33 @@ const Flightnavbar = (props) => {
             setcpcolour('red')
             valid = 0
         }
-        if (valid === 1)
+        if (valid === 1) {
+            console.log(username, password)
+            let registeredUser
+            try {
+                registeredUser = await axios.post('http://localhost:8000/user/register/',
+                    JSON.stringify({ "username": username, "password": password }), {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            }
+            catch (err) {
+                console.log(err)
+            }
+            if (registeredUser) {
+                sessionStorage.setItem('id', registeredUser.id)
+                sessionStorage.setItem('username', registeredUser.username)
+                sessionStorage.setItem('role', registeredUser.role)
+                sessionStorage.setItem('token', registeredUser.accessToken)
+
+            }
             handleClose();
+        }
+        setusername('');
+        setpassword('');
+        setcpassword('')
+        setNavLinks(isLoggedIn());
         //create account
     }
 
@@ -126,7 +163,7 @@ const Flightnavbar = (props) => {
     }
 
     return (
-        <div>
+        <div className='d-flex justify-content-center'>
             <Navbar sticky="top" className='custom-border-fill' expand="lg">
                 <Container>
                     <Navbar.Brand href="#home"> <img src='../flightBrand.png' className='flightBrand' /> </Navbar.Brand>
@@ -135,10 +172,11 @@ const Flightnavbar = (props) => {
                         <Nav className="ms-auto">
 
                             <Nav.Link href="#flights" className="links">Flights</Nav.Link>
-                            <Nav.Link href="#" onClick={handleShow2} className="links">Login</Nav.Link>
-                            <Nav.Link href="#" onClick={handleShow} className="links">Register</Nav.Link>
-                            <NavDropdown title="Cart" id="basic-nav-dropdown" className="links no-margin px-2">
+                            {navLinks}
+                            <NavDropdown title="Cart" id="basic-nav-dropdown" className="links no-margin px-2 cartNav">
                                 <NavDropdown.Item href="#action/3.1">
+                                    <strong>Departure flight</strong>
+                                    <br />
                                     From :{departureFlight && departureFlight.From}
                                     <br />
                                     Date:
@@ -146,7 +184,9 @@ const Flightnavbar = (props) => {
                                 </NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item href="#action/3.1">
-                                    To :{returnFlight && returnFlight.From}
+                                    <strong>Return flight</strong>
+                                    <br />
+                                    From :{returnFlight && returnFlight.From}
                                     <br />
                                     Date: {returnFlight && returnFlight.DepartureDate}
                                 </NavDropdown.Item>
@@ -167,66 +207,7 @@ const Flightnavbar = (props) => {
                     </Navbar.Collapse >
                 </Container >
             </Navbar >
-            <Modalitem show={showSummary} close={handleCloseDetails} title="Order Summary">
-                <div className="row">
-                    <div className="col-5">
-                        <h2 className="display-5">From: {appContext.cart.departureFlight.From}</h2>
-                    </div>
-                    <div className="col-5">
-                        <h2 className="display-5">To: {appContext.cart.departureFlight.To}</h2>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-5">
-                        <h2 className="display-5">Departure:<br />{appContext.cart.departureFlight.DepartureDate}</h2>
-                    </div>
-                    <div className="col-5">
-                        <h2 className="display-5">Arrival:<br /> {appContext.cart.departureFlight.ArrivalDate}</h2>
-                    </div>
-
-                </div>
-                <div className="row">
-                    <div className="col-6">
-                        <h2 className="display-5">Business seats: {appContext.cart.returnFlight.BusinessSeats}</h2>
-                    </div>
-                    <div className="col-6">
-                        <h2 className="display-5">Economy seats: {appContext.cart.returnFlight.EconomySeats}</h2>
-                    </div>
-                </div>
-                <hr />
-                <div className="row">
-                    <div className="col-5">
-                        <h2 className="display-5">From: {appContext.cart.returnFlight.From}</h2>
-                    </div>
-                    <div className="col-5">
-                        <h2 className="display-5">To: {appContext.cart.returnFlight.To}</h2>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-5">
-                        <h2 className="display-5">Departure:<br />{appContext.cart.returnFlight.DepartureDate}</h2>
-                    </div>
-                    <div className="col-5">
-                        <h2 className="display-5">Arrival:<br /> {appContext.cart.returnFlight.ArrivalDate}</h2>
-                    </div>
-
-                </div>
-                <div className="row">
-                    <div className="col-6">
-                        <h2 className="display-5">Business seats: {appContext.cart.returnFlight.BusinessSeats}</h2>
-                    </div>
-                    <div className="col-6">
-                        <h2 className="display-5">Economy seats: {appContext.cart.returnFlight.EconomySeats}</h2>
-                    </div>
-                </div>
-                <Modal.Footer>
-                    <button className="btn btn-outline-success" onClick={() => { confirmFlight(); handleCloseDetails() }}>
-                        Confirm Reservation
-                    </button>
-
-                </Modal.Footer>
-
-            </Modalitem>
+            <Cart showSummary={showSummary} handleCloseDetails={handleCloseDetails} confirmFlight={confirmFlight} />
 
             <Modal show={show} onHide={handleClose}>
                 <ModalHeader closeButton>

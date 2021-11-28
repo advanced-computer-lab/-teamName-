@@ -19,21 +19,7 @@ function removeEmptyVariables(obj) {
 
 function FlightList(props) {
 
-  let body = props.query;
-  let body2 = body;
-  if (body.ArrivalDate) {
-    body2 = {
-      ...body,
-      ['ArrivalDate']: new Date(`${body.ArrivalDate}T24:00`).toISOString(),
-    }
-  }
-  if (body.DepartureDate) {
-    body2 = {
-      ...body,
-      ['DepartureDate']: new Date(`${body.DepartureDate}T24:00`).toISOString()
-    }
-  }
-  removeEmptyVariables(body2)
+
 
 
   let [flights, setFlights] = useState();
@@ -54,27 +40,47 @@ function FlightList(props) {
   }
 
   const appContext = useAppContext()
+
   useEffect(() => {
+    let body = props.query;
+    let body2 = body;
+    if (body.ArrivalDate) {
+      body2 = {
+        ...body,
+        ['ArrivalDate']: new Date(`${body.ArrivalDate}T24:00`).toISOString(),
+      }
+    }
+    if (body.DepartureDate) {
+      body2 = {
+        ...body,
+        ['DepartureDate']: new Date(`${body.DepartureDate}T24:00`).toISOString()
+      }
+    }
+
+    body2 = removeEmptyVariables(body2)
     const sendRequest = async () => {
+
       const reqflights = await axios.post('http://localhost:8000/admin/flight/',
         JSON.stringify(body2), {
         headers: {
           'Content-Type': 'application/json'
         }
       });
+      console.log(reqflights.data.reqFlights)
       setFlights(reqflights.data.reqFlights);
     };
+    
     sendRequest();
-  }, [props.query, appContext.cart.returnFlight]);
+  }, [props.query, appContext.cart.returnFlight ]);
 
-  
+
   const returnFlight = () => {
     const departure = appContext.cart.departureFlight
-    console.log(departure)
+
     if (!flights) {
       return
     }
-    if (!departure.To){
+    if (!departure.To) {
       return
     }
     let newFlights = flights.filter((flight) => {
@@ -88,12 +94,16 @@ function FlightList(props) {
     setFlights(newFlights);
   }
 
-  useEffect(() => {
-    console.log(appContext.cart);
-    returnFlight () 
-  } , [appContext.cart.departureFlight])
 
-  
+  useEffect(() => {
+
+    
+
+    returnFlight()
+    console.log(appContext.cart);
+  }, [appContext.cart.departureFlight])
+
+
 
   return (
     <div className='container '>
@@ -113,6 +123,7 @@ function FlightList(props) {
             Update={updateFlights}
             storage={props}
             returnFlight={returnFlight}
+
           />
         )}
       </ul>

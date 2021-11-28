@@ -1,8 +1,15 @@
 /* #3c88c7 2e74ab a1c4ec */
+
+.cartNav{
+    min-height:fit-content!important;
+}
 .custom-border-fill {
-    background : #3c88c759  ; 
-    border-bottom-left-radius : 10px ;
-    border-bottom-right-radius : 10px ;
+    background : #3c88c7d7  ; 
+    border-bottom-left-radius : 18px ;
+    border-bottom-right-radius : 18px ;
+    border-top-right-radius : -18px ;
+    border-top-left-radius : -18px ;
+    width : 90%;
     box-shadow: 0px 1px 15px 2px  #a1c4ecb6;
 
 }
@@ -23,7 +30,7 @@
     font-family: 'Raleway';
     font-size: 1.4rem ;
     font-weight: 700; 
-    color: #000 ;
+    color: #fff !important; ;
     margin-left: 1em ;
     transition: all 0.30s ease-in-out;
    

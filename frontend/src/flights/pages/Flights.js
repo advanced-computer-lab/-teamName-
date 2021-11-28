@@ -22,19 +22,44 @@ const Flights = (props) => {
             [id]: value,
         }));
     };
+    function removeEmptyVariables(obj) {
+        for (let i in obj) {
+          if (obj[i] === '') {
+      
+            delete obj[i]
+          }
+        }
+      
+        return obj
+      }
     const [searchParams, setParams] = useState({})
     const search = (event) => {
 
-        setParams(form)
+        setParams(removeEmptyVariables(form))
 
     }
-    console.log(props)
-  
+    const clearQuery = () => {
+        setForm({
+            From: '',
+            To: '',
+            BusinessSeats: '',
+            EconomySeats: '',
+            ArrivalDate: '',
+            DepartureDate: '',
+            FlightNumber: '',
+
+        })
+        setParams(removeEmptyVariables(form))
+        console.log(form );
+        
+    }
+    
+
     return (
         <div>
             <Carouselitem />
             <Flightnavbar  {...props} />
-            
+
             <div className='row container-fluid mt-3 worldMap'>
                 <div className="col-3">
                     <form action="" onSubmit={(e) => {
@@ -53,7 +78,7 @@ const Flights = (props) => {
                                     </div>
                                     <div className="col-3">
                                         <label htmlFor="From" className="form-label">From</label>
-                                        <input type="text" className='form-control' id='From' name="From" onChange={e => inputHandler('From', e.target.value)} />
+                                        <input type="text" className='form-control' id='From' name="From" onChange={e => inputHandler('From', e.target.value)} value={form.From} />
                                     </div>
                                     <div className="col-3">
                                         <label htmlFor="To" className="form-label">To</label>
@@ -87,7 +112,7 @@ const Flights = (props) => {
                     </form>
                 </div>
                 <div className="col-8 w-75">
-                    {<FlightList query={searchParams} {...props} />}
+                    {<FlightList query={searchParams} {...props} clearQuery={clearQuery} />}
 
                 </div>
             </div>

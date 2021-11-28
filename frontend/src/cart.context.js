@@ -6,6 +6,11 @@ const CartContextProvider = (props) => {
   const [cart,setCart] = React.useState({
     "departureFlight" : {},
     "returnFlight" : {} , 
+    "busDepSeats" : [] ,
+    "busRetSeats" : [] ,
+    "econDepSeats" : [] ,
+    "econRetSeats" : [] 
+
   })
 
   const addCartItem = (type ,newItem)=>{
