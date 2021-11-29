@@ -10,6 +10,7 @@ import Flights from './flights/pages/Flights'
 
 import { CartContextProvider, useAppContext } from './cart.context'
 
+import Orders from './users/orders'
 
 
 
@@ -43,6 +44,11 @@ function Home() {
         <Route path='/flights/:id' exact>
 
           <FlightDetails />
+
+        </Route>
+        <Route path='/orders' exact>
+
+          <Orders />
 
         </Route>
       </Router>

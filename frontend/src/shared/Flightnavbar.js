@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Navbar, Container, Nav, NavDropdown, Modal } from 'react-bootstrap'
 import ModalHeader from "react-bootstrap/ModalHeader";
 import ModalFooter from "react-bootstrap/ModalFooter";
@@ -20,6 +21,7 @@ const Flightnavbar = (props) => {
     const [returnFlight, setReturn] = useState()
     const appContext = useAppContext();
 
+    let history = useHistory();
     useEffect(() => {
         setDeparture(appContext.cart.departureFlight)
         setReturn(appContext.cart.returnFlight)
@@ -33,9 +35,28 @@ const Flightnavbar = (props) => {
         console.log('showed')
     };
 
-    const confirmFlight = () => {
+    const confirmFlight = async () => {
         if (sessionStorage.getItem('token') && sessionStorage.getItem('role') === 'User') {
-            
+            if (appContext.cart.busDepSeats.length === 0 && appContext.cart.econDepSeats.length === 0) {
+                alert('Please select one or more departure seats')
+                return
+            }
+            if (appContext.cart.busRetSeats.length === 0 && appContext.cart.econRetSeats.length === 0) {
+                alert('Please select one or more return seats')
+                return
+            }
+            console.log(appContext.cart)
+            await axios.post('http://localhost:8000/user/reserveFlight/',
+                JSON.stringify(appContext.cart),
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-access-token': sessionStorage.getItem('token'),
+                        'userId': sessionStorage.getItem('id')
+                    }
+                }
+            )
+            appContext.clearCart();
         }
         else {
             alert('login first to confirm your reservation')
@@ -75,7 +96,12 @@ const Flightnavbar = (props) => {
     const [ucolour2, setucolour2] = useState('') //border colour hooks
     const [pcolour2, setpcolour2] = useState('')
 
+    const logOut = () => {
+        sessionStorage.clear();
 
+        setNavLinks(isLoggedIn());
+        history.push('/flights')
+    }
     const isLoggedIn = () => {
         if (!sessionStorage.getItem('role')) {
             return (
@@ -87,14 +113,12 @@ const Flightnavbar = (props) => {
         else {
             return (<>
                 <Nav.Link href="#" onClick={logOut} className="links">Log out</Nav.Link>
+                <Nav.Link href="/orders" className="links">Orders</Nav.Link>
             </>)
         }
     }
     const [navLinks, setNavLinks] = useState(isLoggedIn)
-    const logOut = () => {
-        sessionStorage.clear();
-        setNavLinks(isLoggedIn());
-    }
+
     async function regValidation() {
         var valid = 1
         //username validation
@@ -129,7 +153,7 @@ const Flightnavbar = (props) => {
         }
         if (valid === 1) {
             console.log(username, password)
-            let registeredUser
+            let registeredUser = {};
             try {
                 registeredUser = await axios.post('http://localhost:8000/user/register/',
                     JSON.stringify({ "username": username, "password": password }), {
@@ -139,13 +163,13 @@ const Flightnavbar = (props) => {
                 });
             }
             catch (err) {
-                console.log(err)
+                alert('Username already registered')
             }
-            if (registeredUser) {
-                sessionStorage.setItem('id', registeredUser.id)
-                sessionStorage.setItem('username', registeredUser.username)
-                sessionStorage.setItem('role', registeredUser.role)
-                sessionStorage.setItem('token', registeredUser.accessToken)
+            if (registeredUser.data) {
+                sessionStorage.setItem('id', registeredUser.data.id)
+                sessionStorage.setItem('username', registeredUser.data.username)
+                sessionStorage.setItem('role', registeredUser.data.role)
+                sessionStorage.setItem('token', registeredUser.data.accessToken)
 
             }
             handleClose();
@@ -157,8 +181,40 @@ const Flightnavbar = (props) => {
         //create account
     }
 
-    function loginValidation() {
+    async function loginValidation() {
+        let registeredUser;
 
+
+        try {
+            registeredUser = await axios.post('http://localhost:8000/admin/login/',
+                JSON.stringify({ "username": username2, "password": password2 }), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+        catch {
+            console.log(registeredUser)
+
+
+            alert('Invalid username or password');
+            handleClose2();
+            return
+
+        }
+
+
+        if (registeredUser) {
+            sessionStorage.setItem('id', registeredUser.data.id)
+            sessionStorage.setItem('username', registeredUser.data.username)
+            sessionStorage.setItem('role', registeredUser.data.role)
+            sessionStorage.setItem('token', registeredUser.data.accessToken)
+
+        }
+        handleClose2();
+        setusername2('');
+        setpassword2('');
+        setNavLinks(isLoggedIn());
 
     }
 
@@ -171,7 +227,7 @@ const Flightnavbar = (props) => {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
 
-                            <Nav.Link href="#flights" className="links">Flights</Nav.Link>
+                            <Nav.Link href="/flights/#flights" className="links">Flights</Nav.Link>
                             {navLinks}
                             <NavDropdown title="Cart" id="basic-nav-dropdown" className="links no-margin px-2 cartNav">
                                 <NavDropdown.Item href="#action/3.1">

@@ -11,10 +11,27 @@ const userFlightsSchema = new Schema(
             type : Schema.Types.ObjectId, 
             ref : 'Flight',
         },
+        depBusSeats : {
+            type : [Number]
+        },
+        depEconSeats : {
+            type : [Number]
+        },
         returnFlight : {
             type : Schema.Types.ObjectId, 
             ref : 'Flight',
+        },
+        retEconSeats : {
+            type : [Number]
+        },
+        retBusSeats : {
+            type : [Number]
+        },
+        totalPrice :{
+            type : Number
         }
+
+        
 
     }
 )

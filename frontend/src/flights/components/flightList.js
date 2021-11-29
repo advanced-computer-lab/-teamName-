@@ -41,7 +41,7 @@ function FlightList(props) {
 
   const appContext = useAppContext()
 
-  useEffect(() => {
+ const useUpdateList = () => { useEffect(() => {
     let body = props.query;
     let body2 = body;
     if (body.ArrivalDate) {
@@ -71,9 +71,9 @@ function FlightList(props) {
     };
     
     sendRequest();
-  }, [props.query, appContext.cart.returnFlight ]);
+  }, [props.query, appContext.cart.returnFlight ]); }
 
-
+  useUpdateList()
   const returnFlight = () => {
     const departure = appContext.cart.departureFlight
 
@@ -123,6 +123,8 @@ function FlightList(props) {
             Update={updateFlights}
             storage={props}
             returnFlight={returnFlight}
+            BusPrice={flight.BusPrice}
+            EconPrice={flight.EconPrice}
 
           />
         )}

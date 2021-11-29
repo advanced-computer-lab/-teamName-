@@ -26,6 +26,7 @@ const FlightItem = (props) => {
         setShowDetails(true)
         console.log('showed')
     };
+    
 
     const appContext = useAppContext()
     const reserveFlight = () => {
@@ -77,7 +78,7 @@ const FlightItem = (props) => {
 
                 </div>
                 <div className="card-footer">
-                    {(localStorage.getItem('role') === 'Admin') &&
+                    {(sessionStorage.getItem('role') === 'Admin') &&
                         <div className='row justify-content-center'>
                             <div className="col-2 offset-4 mx-2">
                                 <button className="btn btn-outline-danger" variant="primary" onClick={handleShow}> Delete</button>

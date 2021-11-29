@@ -20,7 +20,7 @@ exports.login =  (req, res, next) => {
             }
 
             if (!user) {
-                return res.status(404).send({ message: "User Not found." });
+                return res.status(404).send({ Emessage: "User Not found." });
             }
 
             var passwordIsValid = bcrypt.compareSync(
@@ -55,7 +55,7 @@ exports.searchFlights = async (req, res, next) => {
         query = {...query , "EconomySeats": { $size: req.body.EconomySeats }}
     }
     let reqFlights = await flights.find(query);
-    console.log(reqFlights)
+    
     let modifiedFlights = [];
     for (let i = 0; i < reqFlights.length; i++) {
         let newFlight = {

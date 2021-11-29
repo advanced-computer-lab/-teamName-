@@ -4,6 +4,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 const flight = require('../models/flight.js');
 const admin = require('../models/user.js');
+const userFlight = require('../models/userFlight.js');
 const flights = require('./seeds.js');
 const MongoURI = process.env.DBurl;
 var jwt = require("jsonwebtoken");
@@ -17,6 +18,7 @@ mongoose.connect(MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 const seedDB = async () => {
     await flight.deleteMany({});
     await admin.deleteMany({});
+    await userFlight.deleteMany({});
 
     flights.forEach(async (e) => {
         let business = [...Array(parseInt(e.BusinessSeats)).keys()]

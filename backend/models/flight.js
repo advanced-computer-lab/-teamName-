@@ -38,7 +38,17 @@ const flightsSchema = new Schema({
     To: {
         type: String
 
+    },
+    BusPrice : {
+        type: Number ,
+        default : 300
+    },
+    EconPrice : {
+        type: Number ,
+        default : 120
     }
+
+    
 });
 
 module.exports = mongoose.model('Flight', flightsSchema);

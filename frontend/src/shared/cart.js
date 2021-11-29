@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {  Modal } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import { useAppContext } from '../cart.context';
 import Modalitem from './Modalitem';
 import './navbar.css'
@@ -28,7 +28,7 @@ const Cart = (props) => {
         })
         return keyLabelArr
     }
-
+    const [totalSeats, setTotalSeats] = useState(0)
     const onSelectSeatHandler = (key, values) => {
         let seatsSelected = []
         values.forEach((item) => {
@@ -37,15 +37,33 @@ const Cart = (props) => {
         })
 
         appContext.addCartItem(key, seatsSelected)
+       
         console.log(appContext.cart, seatsSelected)
 
     }
 
 
+    const updateTotalSeats = () => {
+        let busDep = appContext.cart.departureFlight.BusPrice * appContext.cart.busDepSeats.length
+        let econDep = appContext.cart.departureFlight.EconPrice * appContext.cart.econDepSeats.length
+        let busRet = appContext.cart.returnFlight.BusPrice * appContext.cart.busRetSeats.length
+        let econRet = appContext.cart.returnFlight.EconPrice * appContext.cart.econRetSeats.length
+        
+        setTotalSeats(busDep + econDep + busRet + econRet)
+        
+        return (busDep + econDep + busRet + econRet)
+    }
+    useEffect(()=> {
+        const price = updateTotalSeats()
+        appContext.addCartItem('totalPrice' , price)
+        console.log(appContext.cart)
+    }, [appContext.cart.busDepSeats.length , appContext.cart.econDepSeats.length , appContext.cart.busRetSeats.length ,appContext.cart.econRetSeats.length ])
+
+
     const isDepartureFlight = () => {
 
         if (appContext.cart.departureFlight.id) {
-            console.log(appContext.cart)
+            
             return (<>
                 <div className="row">
                     <div className="col-5">
@@ -73,6 +91,7 @@ const Cart = (props) => {
                             name="busDep seats"
                             handleOnChange={(selected) => {
                                 onSelectSeatHandler('busDepSeats', selected)
+                                updateTotalSeats();
                             }}
                         />
                     </div>
@@ -82,7 +101,8 @@ const Cart = (props) => {
                             options={returnKeyLabel(appContext.cart.departureFlight.EconomySeats)}
                             name="retDep seats"
                             handleOnChange={(selected) => {
-                                onSelectSeatHandler('econDepSeats', selected)
+                                onSelectSeatHandler('econDepSeats', selected)  
+                                updateTotalSeats();
                             }}
                         />
                     </div>
@@ -119,7 +139,7 @@ const Cart = (props) => {
                             <h2 className="display-5">Business seats available: {appContext.cart.returnFlight.BusinessSeats.length}
                                 <DropdownMultiselect
                                     options={returnKeyLabel(appContext.cart.returnFlight.BusinessSeats)}
-                                    name="seat number"
+                                    name="busRet"
                                     handleOnChange={(selected) => {
                                         onSelectSeatHandler('busRetSeats', selected)
                                     }} />
@@ -130,13 +150,14 @@ const Cart = (props) => {
                             <h2 className="display-5">Economy seats available: {appContext.cart.returnFlight.EconomySeats.length}</h2>
                             <DropdownMultiselect
                                 options={returnKeyLabel(appContext.cart.returnFlight.EconomySeats)}
-                                name="seat number"
+                                name="econRet"
                                 handleOnChange={(selected) => {
                                     onSelectSeatHandler('econRetSeats', selected)
                                 }} />
                         </div>
                     </div>
                     <Modal.Footer>
+
                         <button className="btn btn-outline-success" onClick={() => { props.confirmFlight(); props.handleCloseDetails() }}>
                             Confirm Reservation
                         </button>
@@ -156,6 +177,11 @@ const Cart = (props) => {
                 <hr />
                 <hr />
                 {isReturnFlight()}
+                <Modal.Footer>
+                    <div className="row">
+                        <h2 className="display-5">Total price : {totalSeats}</h2>
+                    </div>
+                </Modal.Footer>
 
 
             </Modalitem>
