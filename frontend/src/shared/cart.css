@@ -1,0 +1,24 @@
+
+div.col-6 .dropdown-menu.show {
+    max-height: 180px ;
+    overflow-y: scroll;
+}
+div.col-6 .dropdown-menu.show::-webkit-scrollbar {
+    width: 7px
+}
+div.col-6 .dropdown-menu.show::-webkit-scrollbar-track {
+    background: rgb(255, 255, 255);
+
+}
+div.col-6 .dropdown-menu.show::-webkit-scrollbar-thumb {
+    border-radius: 1rem;
+    background-color: #00d2ff;
+    background-image: linear-gradient(to top, #2e74ab 0%, #3a7bd5 100%);
+  } 
+.display-5 {
+    font-family: Raleway !important;
+    font-weight: 400 ;
+}
+div.col-6 .display-5 {
+    font-size:calc(100% + 1px)
+}

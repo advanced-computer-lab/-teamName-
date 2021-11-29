@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useHistory } from 'react-router-dom'
-import Pagination from '../../shared/pagination'
 import FlightList from '../components/flightList'
 import Flightnavbar from '../../shared/Flightnavbar'
-const Flights = () => {
+import '../components/flightlist.css'
+import Carouselitem from '../../shared/Carouselitem'
+const Flights = (props) => {
 
     let [form, setForm] = useState({
         From: '',
@@ -22,22 +22,51 @@ const Flights = () => {
             [id]: value,
         }));
     };
+    function removeEmptyVariables(obj) {
+        for (let i in obj) {
+          if (obj[i] === '') {
+      
+            delete obj[i]
+          }
+        }
+      
+        return obj
+      }
     const [searchParams, setParams] = useState({})
     const search = (event) => {
 
-        setParams(form)
+        setParams(removeEmptyVariables(form))
 
     }
+    const clearQuery = () => {
+        setForm({
+            From: '',
+            To: '',
+            BusinessSeats: '',
+            EconomySeats: '',
+            ArrivalDate: '',
+            DepartureDate: '',
+            FlightNumber: '',
+
+        })
+        setParams(removeEmptyVariables(form))
+        console.log(form );
+        
+    }
+    
+
     return (
         <div>
-            <Flightnavbar />
-            <div className='row container-fluid mt-3'>
+            <Carouselitem />
+            <Flightnavbar  {...props} />
+
+            <div className='row container-fluid mt-3 worldMap'>
                 <div className="col-3">
                     <form action="" onSubmit={(e) => {
                         e.preventDefault();
                         search(e);
                     }}>
-                        <div className="card">
+                        <div className="card flight-item mt-2 mb-3">
                             <div className="card-header">
                                 <h1 className="display-5">Search Filters</h1>
                             </div>
@@ -49,7 +78,7 @@ const Flights = () => {
                                     </div>
                                     <div className="col-3">
                                         <label htmlFor="From" className="form-label">From</label>
-                                        <input type="text" className='form-control' id='From' name="From" onChange={e => inputHandler('From', e.target.value)} />
+                                        <input type="text" className='form-control' id='From' name="From" onChange={e => inputHandler('From', e.target.value)} value={form.From} />
                                     </div>
                                     <div className="col-3">
                                         <label htmlFor="To" className="form-label">To</label>
@@ -83,7 +112,7 @@ const Flights = () => {
                     </form>
                 </div>
                 <div className="col-8 w-75">
-                    {<FlightList query={searchParams} />}
+                    {<FlightList query={searchParams} {...props} clearQuery={clearQuery} />}
 
                 </div>
             </div>

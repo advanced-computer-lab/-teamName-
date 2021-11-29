@@ -1,10 +1,26 @@
 /* #3c88c7 2e74ab a1c4ec */
-.custom-border-fill {
-    background : #a1c4ec25  ; 
-    border-bottom-left-radius : 10px ;
-    border-bottom-right-radius : 10px ;
-    box-shadow: 0px 1px 15px 2px #3c88c7c2;
 
+.cartNav{
+    min-height:fit-content!important;
+}
+.custom-border-fill {
+    background : #3c88c7d7  ; 
+    border-bottom-left-radius : 18px ;
+    border-bottom-right-radius : 18px ;
+    border-top-right-radius : -18px ;
+    border-top-left-radius : -18px ;
+    width : 90%;
+    box-shadow: 0px 1px 15px 2px  #a1c4ecb6;
+
+}
+.flight-item {
+    border-radius:  10px ;
+    box-shadow: 0px 1px 7px 1.3px #3c88c754;
+}
+.display-5 {
+    font-family: Raleway;
+    font-weight: 300;
+    font-size: calc(98% + 9px)
 }
 .flightBrand {
     max-width: 50px;
@@ -14,15 +30,35 @@
     font-family: 'Raleway';
     font-size: 1.4rem ;
     font-weight: 700; 
-    color: #000 ;
-    transition: all 0.20s ease-in-out;
-   
+    color: #fff !important; ;
     margin-left: 1em ;
+    transition: all 0.30s ease-in-out;
+   
+    
 }
 .links:hover {
     transform: scale(1.2);
-    margin-right: 1.4em ; 
-    margin-left: 1.4em ;
+    margin-right: 1.3em ; 
+    margin-left: 1.3em ;
+
+
+}
+.no-margin:hover {
+    margin-left : 1em;
+    margin-right : 0px
+}
+.button {
+    
+    border-radius: 10px !important;
+}
+.danger {
+    
+    color : red !important; 
+
+ }
+.success {
+    
+    color: green !important; 
 }
 .form-cotrol{
     width: 300px;

@@ -20,7 +20,7 @@ exports.login =  (req, res, next) => {
             }
 
             if (!user) {
-                return res.status(404).send({ message: "User Not found." });
+                return res.status(404).send({ Emessage: "User Not found." });
             }
 
             var passwordIsValid = bcrypt.compareSync(
@@ -47,8 +47,15 @@ exports.login =  (req, res, next) => {
         });
 }
 exports.searchFlights = async (req, res, next) => {
-    console.log(req.body)
-    let reqFlights = await flights.find(req.body)
+    let query =req.body
+    if(req.body.BusinessSeats) {
+        query = {...query , "BusinessSeats": { $size: req.body.BusinessSeats }}
+    }
+    if(req.body.EconomySeats) {
+        query = {...query , "EconomySeats": { $size: req.body.EconomySeats }}
+    }
+    let reqFlights = await flights.find(query);
+    
     let modifiedFlights = [];
     for (let i = 0; i < reqFlights.length; i++) {
         let newFlight = {
