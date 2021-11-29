@@ -88,7 +88,14 @@ const OrderItem = (props) => {
                         </div>
                         <div className="col-5">
                             <button className="btn btn-outline-danger" 
-                                
+                                onClick={async()=>{
+                                    await axios.delete("http://localhost:8000/user/CancelFlight",
+                                    JSON.stringify({"id":props.id}),
+                                    {Headers:{"Content-Type":"application/json"}})
+
+
+
+                                }}
                             >
                                 Cancel reservation
                             </button>
