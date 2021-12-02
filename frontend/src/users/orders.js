@@ -9,7 +9,31 @@ import { Carousel } from 'react-bootstrap'
 const Orders = (props) => {
 
     const [reservedFlights, setreservedFlights] = useState([]);
+    const update = async (id) => {
+        console.log(JSON.stringify({ "id": id }))
+        let returnedFlights = await axios.delete("http://localhost:8000/user/CancelFlight",
+            {
+                data:
+                {
+                    "id": id,
+                    'userid': sessionStorage.getItem('id'),
+                }
+            },
+            {
+                headers: {
 
+                    "Content-Type": "application/json"
+
+                }
+
+            }
+        )
+
+        let response = returnedFlights.data
+        console.log(response)
+        setreservedFlights(response)
+    }
+    
     useEffect(() => {
         const sendRequest = async () => {
             let flights = await axios.get('http://localhost:8000/user/ReservedFlights',
@@ -44,7 +68,8 @@ const Orders = (props) => {
                                     depEcon={order.depEconSeats}
                                     retBus={order.retBusSeats}
                                     retEcon={order.retEconSeats}
-                                    totalPrice = {order.totalPrice}
+                                    totalPrice={order.totalPrice}
+                                    update={update}
                                 />
 
                             </Carousel.Item>

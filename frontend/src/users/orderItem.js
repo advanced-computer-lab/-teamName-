@@ -4,7 +4,9 @@ import axios from 'axios'
 import './orders.css'
 
 const OrderItem = (props) => {
+    console.log(props)
     return (
+    
         <>
             <Card style={{ width: '32rem' }} className='order-card'>
                 <Card.Header >
@@ -88,14 +90,9 @@ const OrderItem = (props) => {
                         </div>
                         <div className="col-5">
                             <button className="btn btn-outline-danger" 
-                                onClick={async()=>{
-                                    await axios.delete("http://localhost:8000/user/CancelFlight",
-                                    JSON.stringify({"id":props.id}),
-                                    {Headers:{"Content-Type":"application/json"}})
-
-
-
-                                }}
+                                onClick={() => {
+                                    console.log(props.id) 
+                                    props.update(props.id)}}
                             >
                                 Cancel reservation
                             </button>

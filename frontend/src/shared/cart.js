@@ -24,6 +24,7 @@ const Cart = (props) => {
     const returnKeyLabel = (arr) => {
         let keyLabelArr = [];
         arr.forEach(key => {
+            if (key)
             keyLabelArr.push({ "key": key, "label": key.toString() })
         })
         return keyLabelArr
