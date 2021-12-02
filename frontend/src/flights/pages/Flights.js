@@ -49,7 +49,7 @@ const Flights = (props) => {
             FlightNumber: '',
 
         })
-        setParams(removeEmptyVariables(form))
+        
         console.log(form );
         
     }
@@ -57,8 +57,9 @@ const Flights = (props) => {
 
     return (
         <div>
-            <Carouselitem />
             <Flightnavbar  {...props} />
+            <Carouselitem />
+            
 
             <div className='row container-fluid mt-3 worldMap'>
                 <div className="col-3">

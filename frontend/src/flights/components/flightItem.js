@@ -26,12 +26,12 @@ const FlightItem = (props) => {
         setShowDetails(true)
         console.log('showed')
     };
-    
+
 
     const appContext = useAppContext()
     const reserveFlight = () => {
         if (appContext.cart.departureFlight.From && appContext.cart.returnFlight.From) {
-           
+
             alert('Please clear cart first before making a new reservation')
 
         }
@@ -46,38 +46,41 @@ const FlightItem = (props) => {
 
             }
         }
-       
+
     }
 
 
     return (
         <div className="container w-100 mb-3 ">
-            <div className="card custom-border-fill flight-item">
-                <div className="card-body">
-                    <div className="row">
-                        <div className="col-4">
-                            <h2 className="display-5">Flight#: {props.FlightNumber}</h2>
-                        </div>
-                        <div className="col-4">
-                            <h2 className="display-5">From: {props.From}</h2>
-                        </div>
-                        <div className="col-4">
-                            <h2 className="display-5">To: {props.To}</h2>
-                        </div>
-                    </div>
-                    <div className="row">
+            <div className="card custom-border-fill flight-item" style={{borderRadius: '20px'}}>
+                <div className="card-header px-4 cus " >
+                    
+                        <h2 className="display-5 pl-3 pt-2">Flight#: {props.FlightNumber}</h2>
+                  
+                </div>
+                <div className="card-body ">
+                    <div className="row justify-content-center">
+
                         <div className="col-5">
-                            <h2 className="display-5">Departure:<br />{props.DepartureDate}</h2>
+                            <h2 className="display-5 text-center">From: {props.From}</h2>
                         </div>
                         <div className="col-5">
-                            <h2 className="display-5">Arrival:<br /> {props.ArrivalDate}</h2>
+                            <h2 className="display-5 text-center">To: {props.To}</h2>
+                        </div>
+                    </div> 
+                    <div className="row justify-content-center">
+                        <div className="col-5">
+                            <h2 className="display-5 text-center">Departure:<br />{props.DepartureDate}</h2>
+                        </div>
+                        <div className="col-5">
+                            <h2 className="display-5 text-center">Arrival:<br /> {props.ArrivalDate}</h2>
                         </div>
 
                     </div>
 
 
                 </div>
-                <div className="card-footer">
+                <div className="card-footer" >
                     {(sessionStorage.getItem('role') === 'Admin') &&
                         <div className='row justify-content-center'>
                             <div className="col-2 offset-4 mx-2">

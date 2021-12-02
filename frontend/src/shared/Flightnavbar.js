@@ -114,6 +114,7 @@ const Flightnavbar = (props) => {
             return (<>
                 <Nav.Link href="#" onClick={logOut} className="links">Log out</Nav.Link>
                 <Nav.Link href="/orders" className="links">Orders</Nav.Link>
+                <Nav.Link href="/profile" className="links">Profile</Nav.Link>
             </>)
         }
     }
@@ -220,7 +221,7 @@ const Flightnavbar = (props) => {
 
     return (
         <div className='d-flex justify-content-center'>
-            <Navbar sticky="top" className='custom-border-fill' expand="lg">
+            <Navbar fixed="top" className='custom-border-fill' expand="lg">
                 <Container>
                     <Navbar.Brand href="#home"> <img src='../flightBrand.png' className='flightBrand' /> </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />

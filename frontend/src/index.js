@@ -11,6 +11,7 @@ import Flights from './flights/pages/Flights'
 import { CartContextProvider, useAppContext } from './cart.context'
 
 import Orders from './users/orders'
+import Profile from './users/profile'
 
 
 
@@ -49,6 +50,11 @@ function Home() {
         <Route path='/orders' exact>
 
           <Orders />
+
+        </Route>
+        <Route path='/profile' exact>
+
+          <Profile />
 
         </Route>
       </Router>
