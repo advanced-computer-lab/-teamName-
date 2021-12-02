@@ -106,6 +106,27 @@ router.post('/reserveFlight', async (req, res, next) => {
 
 router.delete('/CancelFlight', async (req, res, next) => {
 
+    let depflight = await flights.findById(req.body.departureFlight.id)
+    let retflight = await flights.findById(req.body.returnFlight.id)
+
+ 
+    let UpdateddepflightbusSeats = depflight.BusinessSeats.concat(req.body.busDepSeats)
+    let UpdateddepflighteconSeats = depflight.EconomySeats.concat(req.body.econDepSeats)
+    let UpdatedretflightbusSeats = retflight.BusinessSeats.concat(req.body.busRetSeats)
+    let UpdatedretflighteconSeats = retflight.EconomySeats.concat(req.body.econRetSeats)
+    console.log(UpdateddepflighteconSeats, req.body.econDepSeats)
+
+    let updated = await flights.findByIdAndUpdate(req.body.departureFlight.id, {
+      
+        ...depflight._doc,
+        'EconomySeats': UpdateddepflighteconSeats,
+        'BusinessSeats': UpdateddepflightbusSeats
+    })
+    await flights.findByIdAndUpdate(req.body.returnFlight.id , {
+        ...retflight._doc,
+        'EconomySeats': UpdatedretflighteconSeats,
+        'BusinessSeats': UpdatedretflightbusSeats
+    })
     userFlight.findByIdAndDelete(req.body.id, function (err) {
         if (err) {
             console.log(err)
