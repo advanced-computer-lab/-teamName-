@@ -15,6 +15,22 @@ const user = new Schema({
             'User' , 
             'Admin'
         ]
+    },
+    firstName :{
+        type: String ,
+        default: 'ACL frontend'
+    },
+    lastName : {
+        type : String ,
+        default : 'ACL backend'
+    },
+    email : {
+        type: String ,
+        default: 'omar.mousaaref@gmail.com'
+    },
+    passportNumber : {
+        type : String ,
+        default: 'A123'
     }
 
  });
