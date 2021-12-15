@@ -73,14 +73,26 @@ const Flightnavbar = (props) => {
     const [username, setusername] = useState('') //hooks to take input and set
     const [password, setpassword] = useState('')
     const [cpassword, setcpassword] = useState('')
+    const [firstname, setfirstname] = useState('')
+    const [lastname, setlastname] = useState('')
+    const [email, setemail] = useState('')
+    const [passport, setpassport] = useState('')
 
     const [eusername, seteusername] = useState('') //error hooks to display on error
     const [epassword, setepassword] = useState('')
     const [ecpassword, setecpassword] = useState('')
+    const [efirstname, setefirstname] = useState('')
+    const [elastname, setelastname] = useState('')
+    const [eemail, seteemail] = useState('')
+    const [epassport, setepassport] = useState('')
 
     const [ucolour, setucolour] = useState('') //border colour hooks
     const [pcolour, setpcolour] = useState('')
     const [cpcolour, setcpcolour] = useState('')
+    const [firstnamecolour, setfirstnamecolour] = useState('')
+    const [lastnamecolour, setlastnamecolour] = useState('')
+    const [emailcolour, setemailcolour] = useState('')
+    const [passportcolour, setpassportcolour] = useState('')
 
     //login hooks
     const [show2, setShow2] = useState(false);
@@ -123,7 +135,7 @@ const Flightnavbar = (props) => {
     async function regValidation() {
         var valid = 1
         //username validation
-        if (username.length >= 3) {
+        if (username.length >= 4) {
             seteusername('')
             setucolour('green')
         }
@@ -152,12 +164,56 @@ const Flightnavbar = (props) => {
             setcpcolour('red')
             valid = 0
         }
+        //first name validation
+        if(firstname==""){
+            setefirstname('First name field is required')
+            setfirstnamecolour('red')
+            valid=0
+        }
+        else{
+            setefirstname('')
+            setfirstnamecolour('green')
+        }
+        if(lastname==""){
+            setelastname('Last name field is required')
+            setlastnamecolour('red')
+            valid=0
+        }
+        else{
+            setelastname('')
+            setlastnamecolour('green')
+        }
+        if(email.includes('@')){
+            seteemail('')
+            setemailcolour('green')
+        }
+        else if(email!=''){
+            seteemail('Invalid email format')
+            setemailcolour('red')
+            valid=0
+        }
+        else{
+            seteemail('Email field required')
+            setemailcolour('red')
+            valid=0
+        }
+        if(passport==''){
+            setepassport('Passport number field required')
+            setpassportcolour('red')
+            valid=0
+        }
+        else{
+            setepassport('')
+            setpassportcolour('green')
+
+        }
+
         if (valid === 1) {
             console.log(username, password)
             let registeredUser = {};
             try {
                 registeredUser = await axios.post('http://localhost:8000/user/register/',
-                    JSON.stringify({ "username": username, "password": password }), {
+                    JSON.stringify({ "username": username, "password": password, "email":email, "passportNumber": passport}), {
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -178,6 +234,10 @@ const Flightnavbar = (props) => {
         setusername('');
         setpassword('');
         setcpassword('')
+        setfirstname('')
+        setlastname('')
+        setemail('')
+        setpassport('')
         setNavLinks(isLoggedIn());
         //create account
     }
@@ -280,6 +340,18 @@ const Flightnavbar = (props) => {
                 <input type="password" placeholder='confirm password' className='form-cotrol' style={{ borderColor: cpcolour }}
                     value={cpassword} onChange={(e) => { setcpassword(e.target.value) }} />
                 <p>{ecpassword}</p>
+                <input type="text" placeholder='first name' className='form-cotrol' style={{ borderColor: firstnamecolour }}
+                    value={firstname} onChange={(e) => { setfirstname(e.target.value) }} />
+                <p>{efirstname}</p>
+                <input type="text" placeholder='last name' className='form-cotrol' style={{ borderColor: lastnamecolour }}
+                    value={lastname} onChange={(e) => { setlastname(e.target.value) }} />
+                <p>{elastname}</p>
+                <input type="text" placeholder='email' className='form-cotrol' style={{ borderColor: emailcolour }}
+                    value={email} onChange={(e) => { setemail(e.target.value) }} />
+                <p>{eemail}</p>
+                <input type="text" placeholder='passport number' className='form-cotrol' style={{ borderColor: passportcolour }}
+                    value={passport} onChange={(e) => { setpassport(e.target.value) }} />
+                <p>{epassport}</p>
                 <ModalFooter>
                     <button className="btn btn-outline-danger" variant="secondary" onClick={handleClose}>
                         Cancel
