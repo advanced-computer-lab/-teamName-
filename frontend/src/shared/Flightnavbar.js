@@ -16,17 +16,30 @@ import './navbar.css'
 
 const Flightnavbar = (props) => {
 
-
+    const appContext = useAppContext();
     const [departureFlight, setDeparture] = useState()
     const [returnFlight, setReturn] = useState()
-    const appContext = useAppContext();
+
 
     let history = useHistory();
     useEffect(() => {
         setDeparture(appContext.cart.departureFlight)
         setReturn(appContext.cart.returnFlight)
-    }, [appContext.cart.departureFlight, appContext.cart.returnFlight])
+        console.log("HERERE")
+    }, [appContext.cart.departureFlight.From, appContext.cart.returnFlight.From, appContext.cart.departureFlight.To, appContext.cart.returnFlight.To])
+    useEffect(() => {
+        console.log(appContext.isEditing, appContext.isDepart, appContext.isReturn)
+        if (appContext.isEditing) {
 
+            setDeparture(appContext.cart.departureFlight)
+            setReturn(appContext.cart.returnFlight)
+            console.log(appContext.cart)
+        }
+        else {
+            console.log("is Not editing")
+        }
+
+    }, [appContext.isEditing, appContext.isDepart, appContext.isReturn])
 
     const [showSummary, setShowSummary] = useState(false);
     const handleCloseDetails = () => { console.log('closed'); setShowSummary(false); };
@@ -35,7 +48,10 @@ const Flightnavbar = (props) => {
         console.log('showed')
     };
 
+
     const confirmFlight = async () => {
+        console.log(appContext.cart)
+
         if (sessionStorage.getItem('token') && sessionStorage.getItem('role') === 'User') {
             if (appContext.cart.busDepSeats.length === 0 && appContext.cart.econDepSeats.length === 0) {
                 alert('Please select one or more departure seats')
@@ -45,7 +61,29 @@ const Flightnavbar = (props) => {
                 alert('Please select one or more return seats')
                 return
             }
-            console.log(appContext.cart)
+            if (appContext.isEditing) {
+                alert('Order Edited successfully')
+                appContext.clearCart();
+                history.push('/orders')
+                handleCloseDetails();
+                await axios.put('http://localhost:8000/user/editReservation/',
+                    {
+                        ...JSON.stringify(appContext.cart),
+                        "id": sessionStorage.getItem('reservationId'),
+                        'userid': sessionStorage.getItem('id'),
+                    },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-access-token': sessionStorage.getItem('token'),
+                            'userId': sessionStorage.getItem('id')
+                        }
+                    }
+                )
+                
+            
+                return
+            }
             await axios.post('http://localhost:8000/user/reserveFlight/',
                 JSON.stringify(appContext.cart),
                 {
@@ -56,10 +94,14 @@ const Flightnavbar = (props) => {
                     }
                 }
             )
+            alert('Order submitted successfully')
             appContext.clearCart();
+            handleCloseDetails();
         }
         else {
             alert('login first to confirm your reservation')
+            handleCloseDetails();
+            handleShow2();
         }
     }
 
@@ -237,7 +279,7 @@ const Flightnavbar = (props) => {
                                     From :{departureFlight && departureFlight.From}
                                     <br />
                                     Date:
-                                    {departureFlight && departureFlight.DepartureDate}
+                                    {departureFlight && new Date(departureFlight.DepartureDate).toLocaleDateString()}
                                 </NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item href="#action/3.1">
@@ -245,7 +287,7 @@ const Flightnavbar = (props) => {
                                     <br />
                                     From :{returnFlight && returnFlight.From}
                                     <br />
-                                    Date: {returnFlight && returnFlight.DepartureDate}
+                                    Date: {returnFlight && new Date(returnFlight.DepartureDate).toLocaleDateString()}
                                 </NavDropdown.Item>
 
                                 <NavDropdown.Divider />
@@ -264,7 +306,7 @@ const Flightnavbar = (props) => {
                     </Navbar.Collapse >
                 </Container >
             </Navbar >
-            <Cart showSummary={showSummary} handleCloseDetails={handleCloseDetails} confirmFlight={confirmFlight} />
+            <Cart showSummary={showSummary} handleCloseDetails={handleCloseDetails} confirmFlight={confirmFlight} departure={departureFlight} return={returnFlight} />
 
             <Modal show={show} onHide={handleClose}>
                 <ModalHeader closeButton>

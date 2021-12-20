@@ -3,8 +3,11 @@ import FlightList from '../components/flightList'
 import Flightnavbar from '../../shared/Flightnavbar'
 import '../components/flightlist.css'
 import Carouselitem from '../../shared/Carouselitem'
+import { useAppContext } from '../../cart.context';
+
 const Flights = (props) => {
 
+    const appContext = useAppContext();
     let [form, setForm] = useState({
         From: '',
         To: '',
@@ -53,6 +56,12 @@ const Flights = (props) => {
         console.log(form );
         
     }
+    useEffect(()=> {
+        if (appContext.isEditing){
+            alert('Select your edited flights');
+        }
+
+    },[])
     
 
     return (

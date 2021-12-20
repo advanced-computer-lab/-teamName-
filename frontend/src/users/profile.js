@@ -23,6 +23,7 @@ const Profile = () => {
             "firstName": target.firstName.value,
             "lastName": target.lastName.value
         }
+        alert('profile successfully edited')
         console.log(editInfo);
         let response = await axios.put('http://localhost:8000/user/profile', JSON.stringify(editInfo), {
             headers: { 'Content-Type': 'application/json', 'id': sessionStorage.getItem('id') },

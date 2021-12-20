@@ -21,3 +21,7 @@
     min-height: 500px!important;
   
 }
+.seats-element {
+    display: inline ; 
+    margin: 3px ;
+}

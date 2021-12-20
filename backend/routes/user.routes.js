@@ -40,6 +40,7 @@ router.post('/register', async (req, res, next) => {
             {
                 username: Username,
                 password: bcrypt.hashSync(Password, 8),
+                
                 role: 'User'
             });
         await newUser.save();
@@ -60,7 +61,9 @@ router.post('/register', async (req, res, next) => {
 })
 
 
+const reserve  = async ( req , res , next ) => {
 
+}
 
 
 
