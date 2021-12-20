@@ -26,7 +26,11 @@ router.get('/profile', async (req, res, next) => {
 })
 router.post('/register', async (req, res, next) => {
     const Username = req.body.username;
-    const Password = req.body.password
+    const Password = req.body.password;
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
+    const passportNumber = req.body.passportNumber;
+    const email = req.body.email;
 
     const userFound = await user.find({ username: Username });
     if (userFound.length > 0) {
@@ -40,8 +44,12 @@ router.post('/register', async (req, res, next) => {
             {
                 username: Username,
                 password: bcrypt.hashSync(Password, 8),
-                
-                role: 'User'
+                role: 'User',
+                firstname: firstName,
+                lastname: lastName,
+                email: email,
+                passportNumber: passportNumber,
+
             });
         await newUser.save();
         var token = jwt.sign({ id: user.id }, config.secret, {
@@ -60,10 +68,35 @@ router.post('/register', async (req, res, next) => {
     });
 })
 
+router.post('/ChangePassword', async (req, res, next) => {
+    // const Username = req.body.username;
+    console.log("hana");
+    const OldPassword = req.body.oldpassword;
+    const NewPassword = req.body.newpassword;
 
-const reserve  = async ( req , res , next ) => {
+    const userFound = await user.findById(req.headers.id);
+    var result = bcrypt.compareSync(OldPassword, userFound.password);
+    if (result) {
+        // userFound.Password= bcrypt.hashSync(NewPassword, 8);
+        let updated = await user.findByIdAndUpdate(req.headers.id, {
+            ...userFound._doc,
 
-}
+            'Password': bcrypt.hashSync(NewPassword, 8),
+
+        })
+        res.json('success');
+    }
+
+
+    else {
+        res.status(400).send({ message: 'Passwords do not match' })
+        res.json('fail')
+        return
+
+    }
+})
+
+
 
 
 
@@ -81,7 +114,7 @@ router.post('/reserveFlight', async (req, res, next) => {
     let retflightbusSeats = retflight.BusinessSeats.filter((value) => !req.body.busRetSeats.includes(value))
     let retflighteconSeats = retflight.EconomySeats.filter((value) => !req.body.econRetSeats.includes(value))
 
-    
+
     const newUserFlight = new userFlight({
         'departureFlight': req.body.departureFlight.id,
         'returnFlight': req.body.returnFlight.id,
@@ -104,7 +137,7 @@ router.post('/reserveFlight', async (req, res, next) => {
         'BusinessSeats': retflightbusSeats
     })
     // 
-    
+
     await newUserFlight.save()
 
     let test = await userFlight.find({})
@@ -113,15 +146,18 @@ router.post('/reserveFlight', async (req, res, next) => {
 })
 
 
+
+
+
 router.delete('/CancelFlight', async (req, res, next) => {
 
     let reservation = await userFlight.findById(req.body.id).populate("departureFlight").populate('returnFlight').populate('user');
-    
+
     let depflight = await flights.findById(reservation.departureFlight.id)
     let retflight = await flights.findById(reservation.returnFlight.id)
 
 
-    
+
     let UpdateddepflightbusSeats = depflight.BusinessSeats.concat(reservation.depBusSeats)
     let UpdateddepflighteconSeats = depflight.EconomySeats.concat(reservation.depEconSeats)
     let UpdatedretflightbusSeats = retflight.BusinessSeats.concat(reservation.retBusSeats)
@@ -133,7 +169,7 @@ router.delete('/CancelFlight', async (req, res, next) => {
         'EconomySeats': UpdateddepflighteconSeats,
         'BusinessSeats': UpdateddepflightbusSeats
     })
-    
+
     await flights.findByIdAndUpdate(reservation.returnFlight.id, {
         ...retflight._doc,
         'EconomySeats': UpdatedretflighteconSeats,
@@ -143,7 +179,7 @@ router.delete('/CancelFlight', async (req, res, next) => {
     await userFlight.findByIdAndDelete(req.body.id)
 
     let returnOrders = await userFlight.find({ user: req.body.userid }).populate("departureFlight").populate('returnFlight').populate('user')
-    
+
     res.status(200).json(returnOrders);
 })
 
