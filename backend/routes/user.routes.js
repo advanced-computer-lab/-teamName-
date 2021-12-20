@@ -26,7 +26,11 @@ router.get('/profile', async (req, res, next) => {
 })
 router.post('/register', async (req, res, next) => {
     const Username = req.body.username;
-    const Password = req.body.password
+    const Password = req.body.password;
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
+    const passportNumber= req.body.passportNumber;
+    const email =req.body.email;
 
     const userFound = await user.find({ username: Username });
     if (userFound.length > 0) {
@@ -40,7 +44,12 @@ router.post('/register', async (req, res, next) => {
             {
                 username: Username,
                 password: bcrypt.hashSync(Password, 8),
-                role: 'User'
+                role: 'User',
+                firstname: firstName,
+                lastname: lastName,
+                email:email,
+                passportNumber: passportNumber,
+                
             });
         await newUser.save();
         var token = jwt.sign({ id: user.id }, config.secret, {
