@@ -59,7 +59,31 @@ router.post('/register', async (req, res, next) => {
     });
 })
 
+router.post('/ChangePassword', async (req, res, next) => {
+   // const Username = req.body.username;
+   console.log("hana");
+    const OldPassword = req.body.oldpassword;
+    const NewPassword = req.body.newpassword;
 
+    const userFound = await user.findById( req.headers.id );
+    var result = bcrypt.compareSync(OldPassword,userFound.password);
+if (result){
+   // userFound.Password= bcrypt.hashSync(NewPassword, 8);
+   let updated = await user.findByIdAndUpdate(req.headers.id, {
+    ...userFound._doc,
+   
+    'Password': bcrypt.hashSync(NewPassword, 8),
+    
+})   
+res.json('success');
+}
+    
+
+else{  res.status(400).send({ message: 'Passwords do not match' })
+res.json('fail')
+return
+
+} })
 
 
 
@@ -108,6 +132,9 @@ router.post('/reserveFlight', async (req, res, next) => {
     res.json(test)
 
 })
+
+
+
 
 
 router.delete('/CancelFlight', async (req, res, next) => {
