@@ -97,8 +97,8 @@ return
 
 
 
-router.post('/reserveFlight', async (req, res, next) => {
-
+//reserve flight function 
+const reserveFlight = async(req, res, next) => {
     let depflight = await flights.findById(req.body.departureFlight.id)
     let retflight = await flights.findById(req.body.returnFlight.id)
     console.log(depflight)
@@ -133,7 +133,89 @@ router.post('/reserveFlight', async (req, res, next) => {
         'EconomySeats': retflighteconSeats,
         'BusinessSeats': retflightbusSeats
     })
-    // 
+    
+    await newUserFlight.save()
+
+    let test = await userFlight.find({})
+    res.json(test)
+
+}
+
+//cancel flight function
+const cancelFlight = async(req, res, next) => {
+        let reservation = await userFlight.findById(req.body.id).populate("departureFlight").populate('returnFlight').populate('user');
+        
+        let depflight = await flights.findById(reservation.departureFlight.id)
+        let retflight = await flights.findById(reservation.returnFlight.id)
+    
+    
+        
+        let UpdateddepflightbusSeats = depflight.BusinessSeats.concat(reservation.depBusSeats)
+        let UpdateddepflighteconSeats = depflight.EconomySeats.concat(reservation.depEconSeats)
+        let UpdatedretflightbusSeats = retflight.BusinessSeats.concat(reservation.retBusSeats)
+        let UpdatedretflighteconSeats = retflight.EconomySeats.concat(reservation.retEconSeats)
+    
+        let updated = await flights.findByIdAndUpdate(reservation.departureFlight.id, {
+    
+            ...depflight._doc,
+            'EconomySeats': UpdateddepflighteconSeats,
+            'BusinessSeats': UpdateddepflightbusSeats
+        })
+        
+        await flights.findByIdAndUpdate(reservation.returnFlight.id, {
+            ...retflight._doc,
+            'EconomySeats': UpdatedretflighteconSeats,
+            'BusinessSeats': UpdatedretflightbusSeats
+        })
+    
+        await userFlight.findByIdAndDelete(req.body.id)
+    
+        let returnOrders = await userFlight.find({ user: req.body.userid }).populate("departureFlight").populate('returnFlight').populate('user')
+        
+        //res.status(200).json(returnOrders);
+        next();
+}
+
+//edit reserved flight route
+router.put('/editReservedFlight', cancelFlight, reserveFlight)
+
+
+//reserve flight route
+router.post('/reserveFlight', async(req, res, next) => {
+    let depflight = await flights.findById(req.body.departureFlight.id)
+    let retflight = await flights.findById(req.body.returnFlight.id)
+    console.log(depflight)
+    if (!(depflight['From'] == retflight['To'] && depflight['To'] == retflight['From'])) {
+        res.status(500).send({ message: err });
+        return;
+    }
+    let depflightbusSeats = depflight.BusinessSeats.filter((value) => !req.body.busDepSeats.includes(value))
+    let depflighteconSeats = depflight.EconomySeats.filter((value) => !req.body.econDepSeats.includes(value))
+    let retflightbusSeats = retflight.BusinessSeats.filter((value) => !req.body.busRetSeats.includes(value))
+    let retflighteconSeats = retflight.EconomySeats.filter((value) => !req.body.econRetSeats.includes(value))
+
+    
+    const newUserFlight = new userFlight({
+        'departureFlight': req.body.departureFlight.id,
+        'returnFlight': req.body.returnFlight.id,
+        'user': req.headers.userid,
+        'depBusSeats': req.body.busDepSeats,
+        'depEconSeats': req.body.econDepSeats,
+        'retBusSeats': req.body.busRetSeats,
+        'retEconSeats': req.body.econRetSeats,
+        'totalPrice': req.body.totalPrice,
+    });
+    let updated = await flights.findByIdAndUpdate(req.body.departureFlight.id, {
+
+        ...depflight._doc,
+        'EconomySeats': depflighteconSeats,
+        'BusinessSeats': depflightbusSeats
+    })
+    await flights.findByIdAndUpdate(req.body.returnFlight.id, {
+        ...retflight._doc,
+        'EconomySeats': retflighteconSeats,
+        'BusinessSeats': retflightbusSeats
+    })
     
     await newUserFlight.save()
 
@@ -142,12 +224,8 @@ router.post('/reserveFlight', async (req, res, next) => {
 
 })
 
-
-
-
-
-router.delete('/CancelFlight', async (req, res, next) => {
-
+//cancel flight route
+router.delete('/CancelFlight', async(req, res, next) => {
     let reservation = await userFlight.findById(req.body.id).populate("departureFlight").populate('returnFlight').populate('user');
     
     let depflight = await flights.findById(reservation.departureFlight.id)
