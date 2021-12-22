@@ -51,7 +51,7 @@ const Flightnavbar = (props) => {
     const makePayment = async token => {
         const body = {
             token,
-            "cart" : appContext.cart
+            "cart": appContext.cart
         };
         const headers = {
             "Content-Type": "application/json"
@@ -70,17 +70,14 @@ const Flightnavbar = (props) => {
                 alert('Order Edited successfully')
 
                 handleCloseDetails();
-                await axios.put('http://localhost:8000/user/editReservation/',
-                    {
-                        ...JSON.stringify(appContext.cart),
-                        "id": sessionStorage.getItem('reservationId'),
-                        'userid': sessionStorage.getItem('id'),
-                    },
+                await axios.put('http://localhost:8000/user/editReservedFlight',
+                    JSON.stringify(appContext.cart),
                     {
                         headers: {
                             'Content-Type': 'application/json',
                             'x-access-token': sessionStorage.getItem('token'),
-                            'userId': sessionStorage.getItem('id')
+                            'userId': sessionStorage.getItem('id'),
+                            "id": sessionStorage.getItem('reservationId'),
                         }
                     }
                 )
@@ -93,7 +90,7 @@ const Flightnavbar = (props) => {
             alert('login first to confirm your reservation')
             handleCloseDetails();
             handleShow2();
-            return 
+            return
         }
         fetch(`http://localhost:8000/payment`, {
             method: "POST",

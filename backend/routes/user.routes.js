@@ -103,8 +103,11 @@ router.post('/ChangePassword', async (req, res, next) => {
 
 //reserve flight function 
 const reserveFlight = async(req, res, next) => {
-    let depflight = await flights.findById(req.body.departureFlight.id)
-    let retflight = await flights.findById(req.body.returnFlight.id)
+    console.log(req.body)
+    const id1 = req.body.departureFlight.id ? req.body.departureFlight.id : req.body.departureFlight._id
+    const id2 = req.body.returnFlight.id ? req.body.returnFlight.id : req.body.returnFlight._id
+    let depflight = await flights.findById(id1)
+    let retflight = await flights.findById(id2)
     console.log(depflight)
     if (!(depflight['From'] == retflight['To'] && depflight['To'] == retflight['From'])) {
         res.status(500).send({ message: err });
@@ -117,8 +120,8 @@ const reserveFlight = async(req, res, next) => {
 
 
     const newUserFlight = new userFlight({
-        'departureFlight': req.body.departureFlight.id,
-        'returnFlight': req.body.returnFlight.id,
+        'departureFlight': id1 ,
+        'returnFlight' : id2,
         'user': req.headers.userid,
         'depBusSeats': req.body.busDepSeats,
         'depEconSeats': req.body.econDepSeats,
@@ -148,7 +151,11 @@ const reserveFlight = async(req, res, next) => {
 
 //cancel flight function
 const cancelFlight = async(req, res, next) => {
-        let reservation = await userFlight.findById(req.body.id).populate("departureFlight").populate('returnFlight').populate('user');
+
+        
+        console.log("Cancelling")
+        console.log(req.headers.id)
+        let reservation = await userFlight.findById(req.headers.id).populate("departureFlight").populate('returnFlight').populate('user');
         
         let depflight = await flights.findById(reservation.departureFlight.id)
         let retflight = await flights.findById(reservation.returnFlight.id)
@@ -173,7 +180,7 @@ const cancelFlight = async(req, res, next) => {
             'BusinessSeats': UpdatedretflightbusSeats
         })
     
-        await userFlight.findByIdAndDelete(req.body.id)
+        await userFlight.findByIdAndDelete(req.headers.id)
     
         let returnOrders = await userFlight.find({ user: req.body.userid }).populate("departureFlight").populate('returnFlight').populate('user')
         
