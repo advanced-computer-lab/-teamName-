@@ -10,8 +10,6 @@ import Modalitem from '../../shared/Modalitem'
 import "bootstrap/dist/css/bootstrap.min.css";
 import './flightlist.css'
 import axios from 'axios'
-
-import { createContext, useContext } from 'react';
 import { useAppContext } from '../../cart.context';
 
 const FlightItem = (props) => {
@@ -30,6 +28,45 @@ const FlightItem = (props) => {
 
     const appContext = useAppContext()
     const reserveFlight = () => {
+        if (appContext.isDepart) {
+            appContext.addCartItem('departureFlight', props)
+            if (props.To != appContext.cart.returnFlight.From || props.From != appContext.cart.returnFlight.To) {
+                alert("You have edited the Departure flight entirely, Please choose the new return flight.")
+                appContext.addCartItem('busRetSeats', []);
+                appContext.addCartItem('econRetSeats', []);
+                appContext.addCartItem("totalPrice", 0);
+                appContext.addCartItem("returnFlight", {})
+                appContext.addCartItem('departureFlight', props)
+                appContext.setIsDepart(false)
+                appContext.setIsReturn(true)
+                return
+            }
+            else {
+                alert('Thank you, You can confirm your reservation from the cart')
+                appContext.setIsDepart(false);
+                props.finish();
+                console.log(appContext)
+                return
+            }
+
+        }
+        if (appContext.isReturn) {
+            if (props.To != appContext.cart.departureFlight.From || props.From != appContext.cart.departureFlight.To) {
+                alert('This Trip cannot be chosen since it is different from the departure trip,\n to make a different trip please edit the departure trip first')
+                return
+            } else {
+                appContext.addCartItem('busRetSeats', []);
+                appContext.addCartItem('econRetSeats', []);
+                appContext.addCartItem('returnFlight', props)
+
+                alert('Thank you, You can confirm your reservation from the cart')
+                props.finish();
+                appContext.setIsReturn(false);
+
+                console.log(appContext)
+                return
+            }
+        }
         if (appContext.cart.departureFlight.From && appContext.cart.returnFlight.From) {
 
             alert('Please clear cart first before making a new reservation')
@@ -38,6 +75,7 @@ const FlightItem = (props) => {
         else {
             if (appContext.cart.departureFlight.From) {
                 appContext.addCartItem('returnFlight', props)
+                props.finish();
                 alert('Thank you, You can confirm your reservation from the cart')
             }
             else {
@@ -52,11 +90,11 @@ const FlightItem = (props) => {
 
     return (
         <div className="container w-100 mb-3 ">
-            <div className="card custom-border-fill flight-item" style={{borderRadius: '20px'}}>
+            <div className="card custom-border-fill flight-item" style={{ borderRadius: '20px' }}>
                 <div className="card-header px-4 cus " >
-                    
-                        <h2 className="display-5 pl-3 pt-2">Flight#: {props.FlightNumber}</h2>
-                  
+
+                    <h2 className="display-5 pl-3 pt-2">Flight#: {props.FlightNumber}</h2>
+
                 </div>
                 <div className="card-body ">
                     <div className="row justify-content-center">
@@ -67,7 +105,7 @@ const FlightItem = (props) => {
                         <div className="col-5">
                             <h2 className="display-5 text-center">To: {props.To}</h2>
                         </div>
-                    </div> 
+                    </div>
                     <div className="row justify-content-center">
                         <div className="col-5">
                             <h2 className="display-5 text-center">Departure:<br />{props.DepartureDate}</h2>

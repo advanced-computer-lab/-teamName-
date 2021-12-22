@@ -22,3 +22,7 @@ div.col-6 .dropdown-menu.show::-webkit-scrollbar-thumb {
 div.col-6 .display-5 {
     font-size:calc(100% + 1px)
 }
+.seats-element {
+    display: inline ; 
+    margin: 3px ;
+}

@@ -28,8 +28,8 @@ const Profile = () => {
     const [pcolour, setpcolour] = useState('')
     const [cpcolour, setcpcolour] = useState('')
 
-    async function changePassword(){
-       var valid=1
+    async function changePassword() {
+        var valid = 1
         //new password validation
         if (password.length < 8) {
             setepassword('password must be atleast 8 characters long')
@@ -50,16 +50,30 @@ const Profile = () => {
             setcpcolour('red')
             valid = 0
         }
-        if(valid===1){
+        if (valid === 1) {
             //change pasword code
             const editInfo = {
                 "password": password,
             }
-            console.log(editInfo);
-            let response = await axios.put('http://localhost:8000/user/profile', JSON.stringify(editInfo), {
-                headers: { 'Content-Type': 'application/json', 'id': sessionStorage.getItem('id') },
-            })
-            console.log(response.data)
+            let response;
+            try {
+                response = await axios.post('http://localhost:8000/user/ChangePassword',
+                    JSON.stringify({
+                        "oldpassword": old,
+                        "newpassword": password,
+                    }),
+                    {
+                        headers: { 'Content-Type': 'application/json', 'id': sessionStorage.getItem('id') },
+                    })
+            }
+            catch {
+                alert('Old password is not similar to the registered password')
+                return;
+            }
+            if (response.status == 200) {
+                alert('Password changed successfully');
+
+            }
             handleClose()
         }
     }
@@ -78,6 +92,7 @@ const Profile = () => {
             "firstName": target.firstName.value,
             "lastName": target.lastName.value
         }
+        alert('profile successfully edited')
         console.log(editInfo);
         let response = await axios.put('http://localhost:8000/user/profile', JSON.stringify(editInfo), {
             headers: { 'Content-Type': 'application/json', 'id': sessionStorage.getItem('id') },
@@ -88,14 +103,14 @@ const Profile = () => {
     useEffect(() => {
         let response = ''
         const sendRequest = async () => {
-            response =  await axios.get('http://localhost:8000/user/profile', {
+            response = await axios.get('http://localhost:8000/user/profile', {
                 headers: { 'Content-Type': 'application/json', 'id': sessionStorage.getItem('id') },
             })
             console.log(response.data)
             setProfile(response.data)
         }
         sendRequest()
-        
+
     }, [])
 
 
@@ -118,53 +133,53 @@ const Profile = () => {
                             <Row className="mb-3">
                                 <Form.Group as={Col} controlId="formGridEmail">
                                     <Form.Label>Email</Form.Label>
-                                    <Form.Control type="email" placeholder="Enter email" name="email" defaultValue={profile.email}/>
+                                    <Form.Control type="email" placeholder="Enter email" name="email" defaultValue={profile.email} />
                                 </Form.Group>
 
                                 <Form.Group as={Col} controlId="formGridEmail">
                                     <Form.Label>Passport Number</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter passport number" name="passportNumber" defaultValue={profile.passportNumber}/>
+                                    <Form.Control type="text" placeholder="Enter passport number" name="passportNumber" defaultValue={profile.passportNumber} />
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
                                 <Form.Group as={Col} controlId="formGridEmail">
                                     <Form.Label>First Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter first name" name="firstName" defaultValue={profile.firstName}/>
+                                    <Form.Control type="text" placeholder="Enter first name" name="firstName" defaultValue={profile.firstName} />
                                 </Form.Group>
 
                                 <Form.Group as={Col} controlId="formGridEmail">
                                     <Form.Label>Last Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter last name" name="lastName" defaultValue={profile.lastName}/>
+                                    <Form.Control type="text" placeholder="Enter last name" name="lastName" defaultValue={profile.lastName} />
                                 </Form.Group>
                             </Row>
                             <Button variant="primary" type="submit">
                                 Edit
                             </Button>
-                            <Button className="changePass" variant="danger" type="submit" onClick={() => {handleShow()}}>
+                            <Button className="changePass" variant="danger" type="button" onClick={() => { handleShow() }}>
                                 Change password
                             </Button>
                             <Modal show={show} onHide={handleClose}>
-                                 <ModalHeader closeButton>
+                                <ModalHeader closeButton>
                                     <ModalTitle>Change password</ModalTitle>
-                                        </ModalHeader>
-                                            <br />
-                                            <input type="password" placeholder='old password' className='form-cotrol' style={{ borderColor: oldcolour }}
-                                            value={old} onChange={(e) => { setold(e.target.value) }} />
-                                            <p>{eold}</p>
-                                            <input type="password" placeholder='new password' className='form-cotrol' style={{ borderColor: pcolour }}
-                                            value={password} onChange={(e) => { setpassword(e.target.value) }} />
-                                            <p>{epassword}</p>
-                                            <input type="password" placeholder='confirm new password' className='form-cotrol' style={{ borderColor: cpcolour }}
-                                            value={cpassword} onChange={(e) => { setcpassword(e.target.value) }} />
-                                            <p>{ecpassword}</p>
-                                        <ModalFooter>
-                                            <button className="btn btn-outline-danger" variant="secondary" onClick={handleClose}>
-                                             Cancel
-                                            </button>
-                                            <button className="btn btn-outline-success" variant="primary" onClick={() => changePassword()}>
-                                             Confirm
-                                            </button>
-                                        </ModalFooter>
+                                </ModalHeader>
+                                <br />
+                                <input type="password" placeholder='old password' className='form-cotrol' style={{ borderColor: oldcolour }}
+                                    value={old} onChange={(e) => { setold(e.target.value) }} />
+                                <p>{eold}</p>
+                                <input type="password" placeholder='new password' className='form-cotrol' style={{ borderColor: pcolour }}
+                                    value={password} onChange={(e) => { setpassword(e.target.value) }} />
+                                <p>{epassword}</p>
+                                <input type="password" placeholder='confirm new password' className='form-cotrol' style={{ borderColor: cpcolour }}
+                                    value={cpassword} onChange={(e) => { setcpassword(e.target.value) }} />
+                                <p>{ecpassword}</p>
+                                <ModalFooter>
+                                    <button className="btn btn-outline-danger" variant="secondary" onClick={handleClose}>
+                                        Cancel
+                                    </button>
+                                    <button className="btn btn-outline-success" variant="primary" onClick={() => changePassword()}>
+                                        Confirm
+                                    </button>
+                                </ModalFooter>
                             </Modal>
                         </Form>
 

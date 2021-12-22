@@ -39,13 +39,26 @@ function FlightList(props) {
   const flightFilter = (flight, search) => {
     let conditionsMet = true;
     for (const [key, value] of Object.entries(search)) {
-      console.log(key, value, flight[key])
-      if (flight[key] === value) {
-        conditionsMet = conditionsMet && true;
+      //console.log(key, value, flight[key])
+      if (key === "BusinessSeats" || key === "EconomySeats") {
+        console.log(key, value, flight[key].length)
+        if (flight[key].length === value) {
+          conditionsMet = conditionsMet && true;
 
+        }
+        else {
+          console.log('false')
+          conditionsMet = conditionsMet && false;
+        }
       }
       else {
-        conditionsMet = conditionsMet && false;
+        if (flight[key] === value) {
+          conditionsMet = conditionsMet && true;
+
+        }
+        else {
+          conditionsMet = conditionsMet && false;
+        }
       }
     }
 
@@ -57,41 +70,43 @@ function FlightList(props) {
   const appContext = useAppContext()
 
 
+  const sendRequest = async () => {
+    const reqflights = await axios.post('http://localhost:8000/admin/flight/',
+      JSON.stringify({}), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    setAllFlights(reqflights.data.reqFlights);
+    setFlights(reqflights.data.reqFlights)
+    return(reqflights.data.reqFlights); 
+  }
   useEffect(() => {
 
-    const sendRequest = async () => {
-      const reqflights = await axios.post('http://localhost:8000/admin/flight/',
-        JSON.stringify({}), {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      setAllFlights(reqflights.data.reqFlights);
-      setFlights(reqflights.data.reqFlights)
-    };
+
     sendRequest();
 
-  }, [appContext.cart.returnFlight]);
+  }, []);
 
   let isReturn = false;
   useEffect(() => {
-    let searchedFlights = [] ;
+    let searchedFlights = [];
     if (allFlights) {
       searchedFlights = allFlights.filter(flight => flightFilter(flight, props.query))
       console.log(searchedFlights)
-      
+
     }
-    if (!isReturn) 
-    setFlights(searchedFlights)
-    else 
-    isReturn = true;
+    if (!isReturn)
+      setFlights(searchedFlights)
+    else
+      isReturn = true;
     console.log(flights)
 
 
   }, [props.query]);
 
 
-  const returnFlight = () => { 
+  const returnFlight = () => {
     const departure = appContext.cart.departureFlight
 
     if (!flights) {
@@ -100,7 +115,7 @@ function FlightList(props) {
     if (!departure.To) {
       return
     }
-    let newFlights = flights.filter((flight) => {
+    let newFlights = allFlights.filter((flight) => {
       if (flight.From === departure.To && flight.To === departure.From) {
         return true;
       }
@@ -109,21 +124,63 @@ function FlightList(props) {
       }
     })
     setFlights(newFlights);
+    return newFlights;
+  }
+  const finishedEditing = () => {
+    sendRequest();
   }
 
 
   useEffect(() => {
-    props.clearQuery();
-    returnFlight()
-    isReturn = true;
-  }, [appContext.cart.departureFlight])
+    if (appContext.isEditing || appContext.isReturn) {
+      if (appContext.cart.departureFlight.To != appContext.cart.returnFlight.From) {
 
+        appContext.addCartItem("returnFlight", {});
+        appContext.setIsReturn(true)
+        isReturn = true;
+        returnFlight()
+      }
+      else {
+        return;
+      }
+    }
+    else {
+      props.clearQuery();
+      returnFlight();
+      isReturn = true;
+    }
+
+  }, [appContext.cart.departureFlight.From])
+
+  const [confirm, setConfirm] = useState('Flights: ');
+
+  useEffect(() => {
+    if (appContext.isEditing) {
+      setConfirm('Select the Flight for your Edit');
+    }
+    else {
+      setConfirm("Flights:")
+    }
+  }, [appContext.isEditing])
+
+
+  useEffect(() => {
+    if (appContext.isReturn) {
+      console.log("REturndds", appContext.isReturn)
+      sendRequest()
+      const flightss = returnFlight();
+      isReturn = true;
+      setFlights(flightss);
+      console.log(flightss);
+      console.log(flights)
+    }
+  }, [appContext.isEditing ])
 
 
 
   return (
     <div className='container '>
-      <h1 className='display-4' id='flights'>Flights:</h1>
+      <h1 className='display-4' id='flights'>{confirm}</h1>
       <ul className='flightList py-3 mt-2 custom-scrollbar-css p-2'>
         {flights && flights.map(flight =>
           <FlightItem
@@ -141,7 +198,7 @@ function FlightList(props) {
             returnFlight={returnFlight}
             BusPrice={flight.BusPrice}
             EconPrice={flight.EconPrice}
-
+            finish={finishedEditing}
           />
         )}
       </ul>
