@@ -70,28 +70,29 @@ router.post('/register', async (req, res, next) => {
 
 router.post('/ChangePassword', async (req, res, next) => {
     // const Username = req.body.username;
-    console.log("hana");
+    
     const OldPassword = req.body.oldpassword;
     const NewPassword = req.body.newpassword;
 
     const userFound = await user.findById(req.headers.id);
     var result = bcrypt.compareSync(OldPassword, userFound.password);
     if (result) {
+        console.log("hana");
         // userFound.Password= bcrypt.hashSync(NewPassword, 8);
         let updated = await user.findByIdAndUpdate(req.headers.id, {
             ...userFound._doc,
 
-            'Password': bcrypt.hashSync(NewPassword, 8),
+            'password': bcrypt.hashSync(NewPassword, 8),
 
         })
-        res.json('success');
+        res.status(200).json('success');
     }
 
 
     else {
         res.status(400).send({ message: 'Passwords do not match' })
         res.json('fail')
-        return
+        
 
     }
 })

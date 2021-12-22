@@ -11,6 +11,7 @@ import { useAppContext } from '../cart.context';
 import axios from 'axios'
 
 
+
 import './navbar.css'
 
 
@@ -47,10 +48,14 @@ const Flightnavbar = (props) => {
         setShowSummary(true)
         console.log('showed')
     };
-
-
-    const confirmFlight = async () => {
-        console.log(appContext.cart)
+    const makePayment = async token => {
+        const body = {
+            token,
+            "cart" : appContext.cart
+        };
+        const headers = {
+            "Content-Type": "application/json"
+        };
 
         if (sessionStorage.getItem('token') && sessionStorage.getItem('role') === 'User') {
             if (appContext.cart.busDepSeats.length === 0 && appContext.cart.econDepSeats.length === 0) {
@@ -63,8 +68,7 @@ const Flightnavbar = (props) => {
             }
             if (appContext.isEditing) {
                 alert('Order Edited successfully')
-                appContext.clearCart();
-                history.push('/orders')
+
                 handleCloseDetails();
                 await axios.put('http://localhost:8000/user/editReservation/',
                     {
@@ -80,30 +84,52 @@ const Flightnavbar = (props) => {
                         }
                     }
                 )
-                
-            
+                appContext.clearCart();
+                history.push('/orders')
                 return
             }
-            await axios.post('http://localhost:8000/user/reserveFlight/',
-                JSON.stringify(appContext.cart),
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-access-token': sessionStorage.getItem('token'),
-                        'userId': sessionStorage.getItem('id')
-                    }
-                }
-            )
-            alert('Order submitted successfully')
-            appContext.clearCart();
-            handleCloseDetails();
         }
         else {
             alert('login first to confirm your reservation')
             handleCloseDetails();
             handleShow2();
+            return 
         }
+        fetch(`http://localhost:8000/payment`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify(body)
+        })
+            .then(response => {
+                console.log("RESPONSE ", response);
+                const { status } = response;
+                console.log("STATUS ", status);
+            })
+            .catch(error => console.log(error));
+        await axios.post('http://localhost:8000/user/reserveFlight/',
+            JSON.stringify(appContext.cart),
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-access-token': sessionStorage.getItem('token'),
+                    'userId': sessionStorage.getItem('id')
+                }
+            }
+        )
+        alert('Order submitted successfully')
+        appContext.clearCart();
+        handleCloseDetails();
+    };
+
+
+    const confirmFlight = async () => {
+        console.log(appContext.cart)
+
+
+
     }
+
+
 
 
 
@@ -207,44 +233,44 @@ const Flightnavbar = (props) => {
             valid = 0
         }
         //first name validation
-        if(firstname==""){
+        if (firstname == "") {
             setefirstname('First name field is required')
             setfirstnamecolour('red')
-            valid=0
+            valid = 0
         }
-        else{
+        else {
             setefirstname('')
             setfirstnamecolour('green')
         }
-        if(lastname==""){
+        if (lastname == "") {
             setelastname('Last name field is required')
             setlastnamecolour('red')
-            valid=0
+            valid = 0
         }
-        else{
+        else {
             setelastname('')
             setlastnamecolour('green')
         }
-        if(email.includes('@')){
+        if (email.includes('@')) {
             seteemail('')
             setemailcolour('green')
         }
-        else if(email!=''){
+        else if (email != '') {
             seteemail('Invalid email format')
             setemailcolour('red')
-            valid=0
+            valid = 0
         }
-        else{
+        else {
             seteemail('Email field required')
             setemailcolour('red')
-            valid=0
+            valid = 0
         }
-        if(passport==''){
+        if (passport == '') {
             setepassport('Passport number field required')
             setpassportcolour('red')
-            valid=0
+            valid = 0
         }
-        else{
+        else {
             setepassport('')
             setpassportcolour('green')
 
@@ -255,7 +281,7 @@ const Flightnavbar = (props) => {
             let registeredUser = {};
             try {
                 registeredUser = await axios.post('http://localhost:8000/user/register/',
-                    JSON.stringify({ "username": username, "password": password, "email":email, "passportNumber": passport}), {
+                    JSON.stringify({ "username": username, "password": password, "email": email, "passportNumber": passport }), {
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -366,7 +392,7 @@ const Flightnavbar = (props) => {
                     </Navbar.Collapse >
                 </Container >
             </Navbar >
-            <Cart showSummary={showSummary} handleCloseDetails={handleCloseDetails} confirmFlight={confirmFlight} departure={departureFlight} return={returnFlight} />
+            <Cart showSummary={showSummary} handleCloseDetails={handleCloseDetails} confirmFlight={confirmFlight} departure={departureFlight} return={returnFlight} makePayment={makePayment} />
 
             <Modal show={show} onHide={handleClose}>
                 <ModalHeader closeButton>

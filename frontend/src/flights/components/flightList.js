@@ -115,7 +115,7 @@ function FlightList(props) {
     if (!departure.To) {
       return
     }
-    let newFlights = flights.filter((flight) => {
+    let newFlights = allFlights.filter((flight) => {
       if (flight.From === departure.To && flight.To === departure.From) {
         return true;
       }

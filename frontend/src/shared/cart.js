@@ -6,7 +6,7 @@ import './navbar.css'
 import './cart.css'
 import Multiselect from 'multiselect-react-dropdown';
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
-
+import StripeCheckout from "react-stripe-checkout";
 
 function add(array, value) {
     var index = array.indexOf(value);
@@ -67,7 +67,7 @@ const Cart = (props) => {
         }
         setDeparture(appContext.cart.departureFlight)
         setReturn(appContext.cart.returnFlight)
-    }, [appContext.totalPrice , appContext.isEditing, appContext.isDepart, appContext.isReturn, appContext.cart.departureFlight.From, appContext.cart.returnFlight.From, appContext.cart.departureFlight.To, appContext.cart.returnFlight.To]);
+    }, [appContext.totalPrice, appContext.isEditing, appContext.isDepart, appContext.isReturn, appContext.cart.departureFlight.From, appContext.cart.returnFlight.From, appContext.cart.departureFlight.To, appContext.cart.returnFlight.To]);
 
 
     const updateTotalSeats = () => {
@@ -217,13 +217,24 @@ const Cart = (props) => {
                     </div>
                     <Modal.Footer>
 
-                        <button className="btn btn-outline-success" onClick={() => {
+                        <StripeCheckout
+                            stripeKey="pk_test_51K9DLKEJp0MOvRASGftWvxdsVtFV0TUXtm33HATBblyNeUE2bR0rYPUHKONmydWd3GHxDUHoLiJM0wpUrY9hRblR00PbgLigWR"
+                            token={props.makePayment}
+                            name="Buy Order"
+                            amount={ (totalSeats - sessionStorage.getItem('oldPrice')) * 100}
+                            
+                        >
+                            <button className="btn btn-outline-success" type="submit" onClick={() => {
+                                
+                            }}>
+                                {confirm}
+                            </button>
+                        </StripeCheckout>
 
-                            props.confirmFlight()
 
-                        }}>
-                            {confirm}
-                        </button>
+
+
+
 
                     </Modal.Footer>
                 </>
@@ -247,19 +258,23 @@ const Cart = (props) => {
     return (
         <>
             <Modalitem show={props.showSummary} close={props.handleCloseDetails} title="Order Summary">
+                <div className="product">
+                    {theDep}
+                    <hr />
+                    <hr />
+                    {theRet}
+                    <hr />
+                    <div className="row mt-n1">
+                        <div className="col-5 text-center">
+                            {appContext.isEditing && <h2 className="display-5 text-start">Old Price: {sessionStorage.getItem('oldPrice')}</h2>}
+                        </div>
+                        <div className="col-5 text-start">
+                            <h2 className="display-5 text-start">Total price: {totalSeats}   </h2>
+                        </div>
 
-                {theDep}
-                <hr />
-                <hr />
-                {theRet}
-                <hr />
-                <div className="row mt-n1">
-                    <div className="col-5 text-center"> {appContext.isEditing && <h2 className="display-5 text-start">Old Price :  {sessionStorage.getItem('oldPrice')}</h2>}</div>
-                    <div className="col-5 text-start"> <h2 className="display-5 text-start">Total price : {totalSeats}</h2> </div>
 
 
-
-
+                    </div>
                 </div>
 
 
