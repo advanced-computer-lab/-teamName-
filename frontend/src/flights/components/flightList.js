@@ -40,16 +40,28 @@ function FlightList(props) {
     let conditionsMet = true;
     for (const [key, value] of Object.entries(search)) {
       //console.log(key, value, flight[key])
-      if (key === "BusinessSeats" || key === "EconomySeats") {
-        console.log(key, value, flight[key].length)
-        if (flight[key].length === value) {
-          conditionsMet = conditionsMet && true;
+      if (key === "Cabin") {
+        switch (value) {
+          case "Business":
+            if (flight['BusinessSeats'].length > 0) {
+              conditionsMet =conditionsMet && true;
+            }
+            else {
+              conditionsMet = conditionsMet && false;
+            }
+            break;
+          case "Economy":
+            if (flight['EconomySeats'].length > 0) {
+              conditionsMet = conditionsMet && true;
+            }
+            else {
+              conditionsMet = conditionsMet && false;
+            }
+            break;
+          case "All" : conditionsMet = conditionsMet && true;
 
         }
-        else {
-          console.log('false')
-          conditionsMet = conditionsMet && false;
-        }
+        //console.log(key, value, flight[key].length)
       }
       else {
         if (flight[key] === value) {
@@ -79,7 +91,7 @@ function FlightList(props) {
     });
     setAllFlights(reqflights.data.reqFlights);
     setFlights(reqflights.data.reqFlights)
-    return(reqflights.data.reqFlights); 
+    return (reqflights.data.reqFlights);
   }
   useEffect(() => {
 
@@ -174,7 +186,7 @@ function FlightList(props) {
       console.log(flightss);
       console.log(flights)
     }
-  }, [appContext.isEditing ])
+  }, [appContext.isEditing])
 
 
 
