@@ -66,7 +66,7 @@ app.post("/payment", (req, res) => {
             );
         })
         .then(result => res.status(200).json(result))
-        .catch(err => console.log(err));
+        .catch(err => res.status(200));
 });
 const adminRoutes = require('./routes/admin.routes')
 app.use('/admin', adminRoutes);

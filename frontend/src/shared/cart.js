@@ -216,16 +216,15 @@ const Cart = (props) => {
                         </div>
                     </div>
                     <Modal.Footer>
-
                         <StripeCheckout
                             stripeKey="pk_test_51K9DLKEJp0MOvRASGftWvxdsVtFV0TUXtm33HATBblyNeUE2bR0rYPUHKONmydWd3GHxDUHoLiJM0wpUrY9hRblR00PbgLigWR"
                             token={props.makePayment}
                             name="Buy Order"
-                            amount={ (totalSeats - sessionStorage.getItem('oldPrice')) * 100}
-                            
+                            amount={(totalSeats - sessionStorage.getItem('oldPrice')) * 100}
+
                         >
                             <button className="btn btn-outline-success" type="submit" onClick={() => {
-                                
+
                             }}>
                                 {confirm}
                             </button>

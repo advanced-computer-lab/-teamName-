@@ -27,17 +27,17 @@ const Flights = (props) => {
     };
     function removeEmptyVariables(obj) {
         for (let i in obj) {
-          if (obj[i] === '') {
-      
-            delete obj[i]
-          }
+            if (obj[i] === '') {
+
+                delete obj[i]
+            }
         }
-      
+
         return obj
-      }
+    }
     const [searchParams, setParams] = useState({})
     const search = (event) => {
-
+        console.log(form)
         setParams(removeEmptyVariables(form))
 
     }
@@ -45,30 +45,27 @@ const Flights = (props) => {
         setForm({
             From: '',
             To: '',
-            BusinessSeats: '',
-            EconomySeats: '',
+            Cabin: 'All',
             ArrivalDate: '',
             DepartureDate: '',
-            FlightNumber: '',
-
         })
-        
-        console.log(form );
-        
+
+        console.log(form);
+
     }
-    useEffect(()=> {
-        if (appContext.isEditing){
+    useEffect(() => {
+        if (appContext.isEditing) {
             alert('Select your edited flights');
         }
 
-    },[])
-    
+    }, [])
+
 
     return (
         <div>
             <Flightnavbar  {...props} />
             <Carouselitem />
-            
+
 
             <div className='row container-fluid mt-3 worldMap'>
                 <div className="col-3">
@@ -82,10 +79,6 @@ const Flights = (props) => {
                             </div>
                             <div className="card-body">
                                 <div className="row mb-2">
-                                    <div className="col-5">
-                                        <label htmlFor="From" className="form-label">Flight Number</label>
-                                        <input type="text" className='form-control' id='FlighNumber' name="FlightNumber" onChange={e => inputHandler('FlightNumber', e.target.value)} />
-                                    </div>
                                     <div className="col-3">
                                         <label htmlFor="From" className="form-label">From</label>
                                         <input type="text" className='form-control' id='From' name="From" onChange={e => inputHandler('From', e.target.value)} value={form.From} />
@@ -94,16 +87,26 @@ const Flights = (props) => {
                                         <label htmlFor="To" className="form-label">To</label>
                                         <input type="text" className='form-control' id='To' name="To" onChange={e => inputHandler('To', e.target.value)} />
                                     </div>
+                                    <div className="col-6">
+                                    <label htmlFor="Cabin" className="form-label">Cabin</label>
+                                        <select className="form-select" id="Cabin" onChange={e => inputHandler('Cabin', e.target.value)} >
+                                            <option selected value= "All">Choose a Cabin</option>
+                                            <option value="Business">Business</option>
+                                            <option value="Economy">Economy</option>
+                                            <option value="All">All</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div className="row mb-2">
-                                    <div className="col-6">
-                                        <label htmlFor="Cabin" className="form-label">Economy Seats</label>
-                                        <input type="text" className='form-control' id='EconomySeats' name="EconomySeats" onChange={e => inputHandler('EconomySeats', e.target.value)} />
+
+                                    {/* <div className="col-6">
+                                        <label htmlFor="EconomySeats" className="form-check-label">Economy Seats</label>
+                                        <input type="checkbox" className='form-check-input'  name="EconomySeats" />
                                     </div>
                                     <div className="col-6">
-                                        <label htmlFor="Seats" className="form-label">Business Seats</label>
-                                        <input type="number" className='form-control' id='BusinessSeats' name="BusinessSeats" onChange={e => inputHandler('BusinessSeats', e.target.value)} />
-                                    </div>
+                                        <label htmlFor="BusinessSeats" className="form-check-label">Business Seats</label>
+                                        <input type="checkbox" className='form-check-input' id='BusinessSeats' name="BusinessSeats" onChange={e => inputHandler('BusinessSeats', e.target.value)} />
+                                    </div> */}
                                 </div>
 
                                 <div className="row mb-2">
